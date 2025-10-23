@@ -5,8 +5,6 @@
 This project follows structured GitHub-based version control practices to ensure clean, collaborative, and efficient development.
 Below are the guidelines for working within this repository.
 
----
-
 ### Branching Strategy
 
 - **Main branch**: The `main` branch contains the official version of the project that is intended for TA review and submissions (e.g., proto, midterm, final).
