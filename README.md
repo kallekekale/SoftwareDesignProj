@@ -9,7 +9,7 @@ Below are the guidelines for working within this repository.
 
 ### Branching Strategy
 
-- **Main branch**: The `main` branch contains the official version of the project that is intended for TA review abd submissions (e.g., proto, midterm, final).
+- **Main branch**: The `main` branch contains the official version of the project that is intended for TA review and submissions (e.g., proto, midterm, final).
   - This branch is only merged to when a milestone has been reached.
   - Each submission is marked with a name corresponding its version (e.g., proto, midterm, final).
 - **Development branch**: The `dev` branch serves as the active development branch. It integrates completed feature branches and acts as the staging area before merging into `main`.
@@ -18,8 +18,6 @@ Below are the guidelines for working within this repository.
   - `fix/your-bug-description`: for bug fixes
   - `updt/your-update-description`: for updates or improvements
   - `test/your-test-description`: for testing-related work
-
----
 
 ### Workflow
 
@@ -40,8 +38,6 @@ git commit -m "brief description of change"
 3. Push your branch and open a pull request to merge it into `dev`
 4. Ensure checks pass and request review
 5. After receiving approval from another developer, merge into `dev`
-
----
 
 ### Best practices
 
