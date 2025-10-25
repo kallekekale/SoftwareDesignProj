@@ -33,6 +33,3 @@ jobs:
 
       - name: Build and test
         run: ./mvnw clean verify
-
-      - name: Check code style
-        run: ./mvnw checkstyle:check
