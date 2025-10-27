@@ -39,5 +39,8 @@ jobs:
 
       - name: ESLint
         run: npm run lint
-        # Jos haluat kaataa buildin myös varoituksista:
+        # If you want to fail build on warnings:
         # run: npm run lint -- --max-warnings=0
+
+      - name: Build
+        run: npm run build
