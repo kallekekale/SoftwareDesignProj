@@ -2,11 +2,14 @@ name: Frontend CI
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - dev
     paths:
       - "frontend/**"
   push:
-    branches: [main]
+    branches:
+      - dev
     paths:
       - "frontend/**"
 
@@ -21,20 +24,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Use Node 20 LTS
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: "frontend/package-lock.json"
+          cache: "pnpm"
+          cache-dependency-path: "frontend/pnpm-lock.yaml"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Prettier (check)
-        run: npm run prettier:check
+        run: pnpm run prettier:check
 
       - name: ESLint
-        run: npm run lint
-        # Jos haluat kaataa buildin myös varoituksista:
-        # run: npm run lint -- --max-warnings=0
+        run: pnpm run lint
+        # If you want to fail build on warnings:
+        # run: pnpm run lint -- --max-warnings=0
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Use Node 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: "frontend/pnpm-lock.yaml"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
