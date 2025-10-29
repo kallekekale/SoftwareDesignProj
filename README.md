@@ -1,5 +1,54 @@
 # SoftwareDesignProj
 
+## Running the Project
+
+### Prerequisites
+
+- **Java 21**
+- **Maven** (or use the included Maven wrapper `mvnw`)
+- **Node.js** (version 18 or higher recommended)
+- **pnpm** package manager
+
+### Quick Start (Recommended)
+
+Install dependencies in the root directory (first time only):
+
+```bash
+pnpm install
+```
+
+Then run both backend and frontend with one command:
+
+```bash
+pnpm dev
+```
+
+This will start:
+
+- Backend (Spring Boot) on `http://localhost:8080`
+- Frontend (React + Vite) on `http://localhost:5173`
+
+Press `CTRL+C` to stop both services.
+
+### Running Services Individually
+
+If you want to run the services separately:
+
+**Backend:**
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+**Frontend:**
+
+```bash
+cd frontend
+pnpm install  # first time only
+pnpm dev
+```
+
 ## Version Control Guidelines
 
 This project follows structured GitHub-based version control practices to ensure clean, collaborative, and efficient development.
