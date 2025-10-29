@@ -5,9 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST controller for Open Brewery DB API endpoints.
- */
+/** REST controller for Open Brewery DB API endpoints. */
 @RestController
 @RequestMapping("/api/breweries")
 public class OpenBreweryDbController {

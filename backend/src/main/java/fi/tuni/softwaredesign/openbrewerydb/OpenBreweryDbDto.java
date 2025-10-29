@@ -3,8 +3,8 @@ package fi.tuni.softwaredesign.openbrewerydb;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Data Transfer Object for Open Brewery DB API responses.
- * Maps to the brewery data returned by the Open Brewery DB API.
+ * Data Transfer Object for Open Brewery DB API responses. Maps to the brewery data returned by the
+ * Open Brewery DB API.
  */
 public class OpenBreweryDbDto {
 

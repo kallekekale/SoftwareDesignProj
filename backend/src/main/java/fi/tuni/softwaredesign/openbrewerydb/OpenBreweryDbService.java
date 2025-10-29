@@ -3,9 +3,7 @@ package fi.tuni.softwaredesign.openbrewerydb;
 import fi.tuni.softwaredesign.http.HttpRequester;
 import org.springframework.stereotype.Service;
 
-/**
- * Service for interacting with the Open Brewery DB API.
- */
+/** Service for interacting with the Open Brewery DB API. */
 @Service
 public class OpenBreweryDbService {
 
