@@ -261,8 +261,7 @@ public final class HttpRequesterService implements HttpRequester {
   }
 
   /**
-   * Creates HTTP headers with the given custom headers. Sets content type to JSON by default for
-   * requests with a body.
+   * Creates HTTP headers with the given custom headers. Sets content type to JSON by default.
    *
    * @param headers Optional map of custom headers
    * @return HttpHeaders object with the configured headers
