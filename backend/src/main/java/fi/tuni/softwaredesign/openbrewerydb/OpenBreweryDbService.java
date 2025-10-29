@@ -24,4 +24,17 @@ public class OpenBreweryDbService {
     String url = BASE_URL + "/" + id;
     return httpRequester.get(url, OpenBreweryDbDto.class);
   }
+
+  /**
+   * Get breweries sorted by distance from an origin point.
+   *
+   * @param byDist  the origin point as "latitude,longitude"
+   * @param perPage the number of results per page (optional)
+   * @return array of OpenBreweryDbDto containing the brewery information
+   */
+  public OpenBreweryDbDto[] getBreweriesByDistance(String byDist, Integer perPage) {
+    StringBuilder url = new StringBuilder(BASE_URL + "?by_dist=" + byDist);
+    url.append("&per_page=").append(perPage != null ? perPage : 10);
+    return httpRequester.get(url.toString(), OpenBreweryDbDto[].class);
+  }
 }
