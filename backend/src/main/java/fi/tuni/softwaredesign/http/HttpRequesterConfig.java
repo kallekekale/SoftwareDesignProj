@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
  * dependency injection.
  */
 @Configuration
-public final class HttpRequesterConfig {
+public class HttpRequesterConfig {
 
   /** Connection timeout in seconds. */
   private static final int CONNECT_TIMEOUT_SECONDS = 10;
@@ -29,15 +29,9 @@ public final class HttpRequesterConfig {
    */
   @Bean
   public RestTemplate restTemplate(final RestTemplateBuilder builder) {
-    return builder
-        .requestFactory(
-            () -> {
-              var factory = new SimpleClientHttpRequestFactory();
-              factory.setConnectTimeout(
-                  (int) Duration.ofSeconds(CONNECT_TIMEOUT_SECONDS).toMillis());
-              factory.setReadTimeout((int) Duration.ofSeconds(READ_TIMEOUT_SECONDS).toMillis());
-              return factory;
-            })
-        .build();
+    var factory = new SimpleClientHttpRequestFactory();
+    factory.setConnectTimeout((int) Duration.ofSeconds(CONNECT_TIMEOUT_SECONDS).toMillis());
+    factory.setReadTimeout((int) Duration.ofSeconds(READ_TIMEOUT_SECONDS).toMillis());
+    return builder.requestFactory(() -> factory).build();
   }
 }
