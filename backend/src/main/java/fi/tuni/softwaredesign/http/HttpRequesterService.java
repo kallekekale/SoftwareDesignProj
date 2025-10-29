@@ -28,20 +28,53 @@ public final class HttpRequesterService implements HttpRequester {
     this.restTemplate = template;
   }
 
+  /**
+   * Performs an HTTP GET request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the GET request to
+   * @param responseType the expected response type
+   * @param headers additional headers to include in the request
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T get(
       final String url, final Class<T> responseType, final Map<String, String> headers) {
-    HttpHeaders httpHeaders = createHeaders(headers);
+    HttpHeaders httpHeaders = createHeaders(headers, false);
     HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP GET request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the GET request to
+   * @param responseType the expected response type
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T get(final String url, final Class<T> responseType) {
     return restTemplate.getForObject(url, responseType);
   }
 
+  /**
+   * Performs an HTTP POST request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the POST request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @param headers additional headers to include in the request
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T post(
       final String url,
@@ -54,11 +87,34 @@ public final class HttpRequesterService implements HttpRequester {
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP POST request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the POST request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T post(final String url, final Object body, final Class<T> responseType) {
     return restTemplate.postForObject(url, body, responseType);
   }
 
+  /**
+   * Performs an HTTP PUT request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the PUT request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @param headers additional headers to include in the request
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T put(
       final String url,
@@ -71,15 +127,37 @@ public final class HttpRequesterService implements HttpRequester {
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP PUT request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the PUT request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T put(final String url, final Object body, final Class<T> responseType) {
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    HttpHeaders httpHeaders = createHeaders(null);
     HttpEntity<?> entity = new HttpEntity<>(body, httpHeaders);
     ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.PUT, entity, responseType);
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP PATCH request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the PATCH request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @param headers additional headers to include in the request
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T patch(
       final String url,
@@ -92,28 +170,59 @@ public final class HttpRequesterService implements HttpRequester {
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP PATCH request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the PATCH request to
+   * @param body the request body
+   * @param responseType the expected response type
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T patch(final String url, final Object body, final Class<T> responseType) {
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    HttpHeaders httpHeaders = createHeaders(null);
     HttpEntity<?> entity = new HttpEntity<>(body, httpHeaders);
     ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.PATCH, entity, responseType);
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP DELETE request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the DELETE request to
+   * @param responseType the expected response type
+   * @param headers additional headers to include in the request
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T delete(
       final String url, final Class<T> responseType, final Map<String, String> headers) {
-    HttpHeaders httpHeaders = createHeaders(headers);
+    HttpHeaders httpHeaders = createHeaders(headers, false);
     HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     ResponseEntity<T> response =
         restTemplate.exchange(url, HttpMethod.DELETE, entity, responseType);
     return response.getBody();
   }
 
+  /**
+   * Performs an HTTP DELETE request and returns the response body.
+   *
+   * <p>Note: If the server returns an empty response body, this method will return {@code null}.
+   *
+   * @param <T> The type of the response
+   * @param url the URL to send the DELETE request to
+   * @param responseType the expected response type
+   * @return the response body, or {@code null} if the response is empty
+   */
   @Override
   public <T> T delete(final String url, final Class<T> responseType) {
-    HttpHeaders httpHeaders = new HttpHeaders();
+    HttpHeaders httpHeaders = createHeaders(null, false);
     HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     ResponseEntity<T> response =
         restTemplate.exchange(url, HttpMethod.DELETE, entity, responseType);
@@ -122,7 +231,7 @@ public final class HttpRequesterService implements HttpRequester {
 
   @Override
   public void delete(final String url, final Map<String, String> headers) {
-    HttpHeaders httpHeaders = createHeaders(headers);
+    HttpHeaders httpHeaders = createHeaders(headers, false);
     HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
     restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
   }
@@ -133,17 +242,32 @@ public final class HttpRequesterService implements HttpRequester {
   }
 
   /**
-   * Creates HTTP headers with the given custom headers. Sets content type to JSON by default.
+   * Creates HTTP headers with the given custom headers. Sets content type to JSON by default for
+   * requests with a body.
+   *
+   * @param headers Optional map of custom headers
+   * @param includeContentType Whether to set Content-Type header to application/json
+   * @return HttpHeaders object with the configured headers
+   */
+  private HttpHeaders createHeaders(final Map<String, String> headers, boolean includeContentType) {
+    HttpHeaders httpHeaders = new HttpHeaders();
+    if (includeContentType) {
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+    }
+    if (headers != null) {
+      headers.forEach(httpHeaders::set);
+    }
+    return httpHeaders;
+  }
+
+  /**
+   * Creates HTTP headers with the given custom headers. Sets content type to JSON by default for
+   * requests with a body.
    *
    * @param headers Optional map of custom headers
    * @return HttpHeaders object with the configured headers
    */
   private HttpHeaders createHeaders(final Map<String, String> headers) {
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-    if (headers != null) {
-      headers.forEach(httpHeaders::set);
-    }
-    return httpHeaders;
+    return createHeaders(headers, true);
   }
 }
