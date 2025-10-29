@@ -1,6 +1,5 @@
 /**
- * Hello World REST controller package.
- * Contains basic example endpoints for testing.
+ * Hello World REST controller package. Contains basic example endpoints for testing.
  *
  * @since 1.0
  */
