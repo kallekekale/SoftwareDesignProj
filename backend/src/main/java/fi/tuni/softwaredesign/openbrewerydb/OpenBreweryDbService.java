@@ -28,7 +28,7 @@ public class OpenBreweryDbService {
   /**
    * Get breweries sorted by distance from an origin point.
    *
-   * @param byDist  the origin point as "latitude,longitude"
+   * @param byDist the origin point as "latitude,longitude"
    * @param perPage the number of results per page (optional)
    * @return array of OpenBreweryDbDto containing the brewery information
    */
