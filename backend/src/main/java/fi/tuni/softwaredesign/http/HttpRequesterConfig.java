@@ -12,17 +12,34 @@ import java.time.Duration;
  * Provides configured RestTemplate bean for dependency injection.
  */
 @Configuration
-public class HttpRequesterConfig {
-    
+public final class HttpRequesterConfig {
+
+    /** Connection timeout in seconds. */
+    private static final int CONNECT_TIMEOUT_SECONDS = 10;
+
+    /** Read timeout in seconds. */
+    private static final int READ_TIMEOUT_SECONDS = 30;
+
+    /**
+     * Creates and configures a RestTemplate bean.
+     * Sets connection and read timeouts for HTTP requests.
+     *
+     * @param builder The RestTemplateBuilder provided by Spring Boot
+     * @return Configured RestTemplate instance
+     */
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate(final RestTemplateBuilder builder) {
         return builder
-            .requestFactory(() -> {
-                var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
-                factory.setConnectTimeout((int) Duration.ofSeconds(10).toMillis());
-                factory.setReadTimeout((int) Duration.ofSeconds(30).toMillis());
-                return factory;
-            })
-            .build();
+                .requestFactory(() -> {
+                    var factory = new org.springframework.http.client.SimpleClientHttpRequestFactory();
+                    factory.setConnectTimeout(
+                            (int) Duration.ofSeconds(CONNECT_TIMEOUT_SECONDS)
+                                    .toMillis());
+                    factory.setReadTimeout(
+                            (int) Duration.ofSeconds(READ_TIMEOUT_SECONDS)
+                                    .toMillis());
+                    return factory;
+                })
+                .build();
     }
 }
