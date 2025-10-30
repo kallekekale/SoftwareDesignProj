@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(BreweryNotFoundWithDistException.class)
   public ResponseEntity<ErrorResponse> handleBreweryNotFoundWithDistException(
       BreweryNotFoundWithDistException ex, WebRequest request) {
-    logger.error("Brewery not found with distance: {}", ex.getByDist(), ex);
+    logger.error("Brewery not found with coordinates: " + ex.getCoordinates(), ex);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(
             new ErrorResponse(
