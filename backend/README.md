@@ -9,7 +9,7 @@
 
 To start the application in development, run:
 ```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.arguments="--logging.level.fi.tuni.softwaredesign=DEBUG"
 ```
 
 ### Reference Documentation
