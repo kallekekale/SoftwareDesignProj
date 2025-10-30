@@ -1,4 +1,4 @@
-package fi.tuni.softwaredesign.shared.http.exceptions;
+package fi.tuni.softwaredesign.shared.config;
 
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+
+import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundException;
+import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundWithDistException;
 
 /** Global exception handler for all REST controllers. */
 @RestControllerAdvice
