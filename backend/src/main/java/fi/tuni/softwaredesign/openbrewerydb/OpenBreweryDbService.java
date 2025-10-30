@@ -1,12 +1,11 @@
 package fi.tuni.softwaredesign.openbrewerydb;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundException;
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundWithDistException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /** Service for interacting with the Open Brewery DB API. */
 @Service
