@@ -7,7 +7,7 @@
 
 ## Running the Application
 
-To start the application, run:
+To start the application in development, run:
 ```bash
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
