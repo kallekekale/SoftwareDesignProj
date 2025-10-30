@@ -1,5 +1,7 @@
 package fi.tuni.softwaredesign.openbrewerydb;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ public class OpenBreweryDbController {
 
   private final OpenBreweryDbService openBreweryDbService;
 
+  @Autowired
   public OpenBreweryDbController(OpenBreweryDbService openBreweryDbService) {
     this.openBreweryDbService = openBreweryDbService;
   }
@@ -24,8 +27,9 @@ public class OpenBreweryDbController {
    * @return OpenBreweryDbDto containing the brewery information
    */
   @GetMapping("/{id}")
-  public OpenBreweryDbDto getBreweryById(@PathVariable String id) {
-    return openBreweryDbService.getBreweryById(id);
+  public ResponseEntity<OpenBreweryDbDto> getBreweryById(@PathVariable String id) {
+    OpenBreweryDbDto brewery = openBreweryDbService.getBreweryById(id);
+    return ResponseEntity.ok(brewery);
   }
 
   /**
@@ -36,9 +40,10 @@ public class OpenBreweryDbController {
    * @return array of OpenBreweryDbDto containing the brewery information
    */
   @GetMapping
-  public OpenBreweryDbDto[] getBreweriesByDistance(
+  public ResponseEntity<OpenBreweryDbDto[]> getBreweriesByDistance(
       @RequestParam("by_dist") String byDist,
       @RequestParam(value = "per_page", required = false) Integer perPage) {
-    return openBreweryDbService.getBreweriesByDistance(byDist, perPage);
+    OpenBreweryDbDto[] breweries = openBreweryDbService.getBreweriesByDistance(byDist, perPage);
+    return ResponseEntity.ok(breweries);
   }
 }

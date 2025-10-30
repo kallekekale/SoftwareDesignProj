@@ -1,4 +1,4 @@
-package fi.tuni.softwaredesign.http;
+package fi.tuni.softwaredesign.shared.http;
 
 import java.time.Duration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
