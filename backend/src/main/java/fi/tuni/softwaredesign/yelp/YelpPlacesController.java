@@ -1,8 +1,8 @@
 package fi.tuni.softwaredesign.yelp;
 
 import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
-import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceResponseDto;
+import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

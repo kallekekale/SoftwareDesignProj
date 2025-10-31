@@ -2,11 +2,11 @@ package fi.tuni.softwaredesign.yelp;
 
 import fi.tuni.softwaredesign.distance.DistanceService;
 import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
-import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceResponseDto;
+import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
-//import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundWithDistException;
+// import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundWithDistException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,7 +62,7 @@ public class YelpPlacesService {
 
       if (response == null || response.getBusinesses() == null) {
         throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-        //throw new BusinessNotFoundNearbyException(coordinates);
+        // throw new BusinessNotFoundNearbyException(coordinates);
       }
 
       return response.getBusinesses().stream()
@@ -80,7 +80,7 @@ public class YelpPlacesService {
     } catch (Exception e) {
       logger.error("Error fetching nearby Yelp restaurants for: {}", coordinates, e);
       throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-      //throw new BusinessNotFoundNearbyException(coordinates);
+      // throw new BusinessNotFoundNearbyException(coordinates);
     }
   }
 }
