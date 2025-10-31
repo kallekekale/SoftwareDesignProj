@@ -63,9 +63,9 @@ This section answers: **“which data sources will be used and how.”**
                               │
                               ▼
                         ┌──────────────┐
-                        │             │
-                        │  Yelp API   │
-                        │             │
+                        │              │
+                        │  Yelp API    │
+                        │              │
                         └──────────────┘
 ```
 
