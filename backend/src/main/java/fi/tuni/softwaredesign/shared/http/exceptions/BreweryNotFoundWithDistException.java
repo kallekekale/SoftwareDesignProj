@@ -1,20 +1,22 @@
 package fi.tuni.softwaredesign.shared.http.exceptions;
 
+import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
+
 /** Exception thrown when a brewery is not found with given coordinates. */
 public class BreweryNotFoundWithDistException extends RuntimeException {
-  private final String byDist;
+  private final CoordinateDto coordinates;
 
-  public BreweryNotFoundWithDistException(String byDist) {
-    super("Brewery not found with distance: " + byDist);
-    this.byDist = byDist;
+  public BreweryNotFoundWithDistException(CoordinateDto coordinates) {
+    super("Brewery not found with coordinates: " + coordinates);
+    this.coordinates = coordinates;
   }
 
-  public BreweryNotFoundWithDistException(String byDist, Throwable cause) {
-    super("Brewery not found with distance: " + byDist, cause);
-    this.byDist = byDist;
+  public BreweryNotFoundWithDistException(CoordinateDto coordinates, Throwable cause) {
+    super("Brewery not found with coordinates: " + coordinates, cause);
+    this.coordinates = coordinates;
   }
 
-  public String getByDist() {
-    return byDist;
+  public CoordinateDto getCoordinates() {
+    return coordinates;
   }
 }

@@ -1,12 +1,12 @@
-package fi.tuni.softwaredesign.openbrewerydb;
+package fi.tuni.softwaredesign.shared.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Data Transfer Object for Open Brewery DB API responses. Maps to the brewery data returned by the
- * Open Brewery DB API.
+ * Response DTO for brewery information from Open Brewery DB API. Maps to the brewery data structure
+ * returned by the external API.
  */
-public record OpenBreweryDbDto(
+public record OpenBreweryDbResponseDto(
     String id,
     String name,
     @JsonProperty("brewery_type") String breweryType,
