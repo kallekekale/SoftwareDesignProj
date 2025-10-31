@@ -12,11 +12,13 @@ This is a React application that finds the 10 closest breweries from a selected 
 ## Running the Application
 
 1. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 2. **Start the development server:**
+
    ```bash
    pnpm dev
    ```
@@ -37,6 +39,7 @@ This is a React application that finds the 10 closest breweries from a selected 
 ## Mocked Locations
 
 The application comes with three predefined locations:
+
 - **Helsinki, Finland** (60.1699°N, 24.9384°E)
 - **San Diego, USA** (32.7157°N, -117.1611°W)
 - **Portland, USA** (45.5152°N, -122.6784°W)
@@ -44,6 +47,7 @@ The application comes with three predefined locations:
 ## API Integration
 
 The frontend communicates with the backend API:
+
 - **Endpoint**: `POST /api/breweries/distance`
 - **Request**: Coordinates (latitude, longitude)
 - **Response**: List of breweries with calculated distances

@@ -1,18 +1,21 @@
-import type { Coordinates, BreweryWithDistance } from '../types/brewery';
+import type { Coordinates, BreweryWithDistance } from "../types/brewery";
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 export const fetchBreweriesByDistance = async (
   coordinates: Coordinates,
-  perPage: number = 10
+  perPage: number = 10,
 ): Promise<BreweryWithDistance[]> => {
-  const response = await fetch(`${API_BASE_URL}/breweries/distance?per_page=${perPage}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    `${API_BASE_URL}/breweries/distance?per_page=${perPage}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(coordinates),
     },
-    body: JSON.stringify(coordinates),
-  });
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch breweries: ${response.statusText}`);
