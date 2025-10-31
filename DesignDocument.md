@@ -2,7 +2,7 @@
 
 ## Design Document
 
- **Team** Aleksanteri Heinonen, Juho Kangas, Nandan von Veh and Wilhem Tcheng
+ **Team** Aleksanteri Heinonen, Juho Kangas, Kalle Kekäle, Nandan von Veh and Wilhem Tcheng
  **Version:** Prototype
 
 ## 1. Overview
@@ -121,3 +121,4 @@ Response: List of restaurants near the specified coordinates
   }
   ```
 
+(Part 4 and 5 have been made with Claude 3.5 Sonnet ai)
