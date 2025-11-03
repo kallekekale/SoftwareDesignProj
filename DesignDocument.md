@@ -84,7 +84,7 @@ This section answers: **“which data sources will be used and how.”**
 - **OpenBreweryDbController:** REST endpoints for brewery operations
 - **YelpService:** (To be implemented) Handles restaurant data fetching
 
-### 4.3 Data Flow
+### 4.3 Data Flow (will change)
 1. Frontend makes API call to backend for city search
 2. Backend fetches brewery data from Open Brewery DB
 3. User selects brewery, triggering restaurant search
