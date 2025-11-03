@@ -95,19 +95,30 @@ This section answers: **“which data sources will be used and how.”**
 
 ### 5.1 Backend REST Endpoints
 
-#### Brewery Endpoints
+#### OpenBreweryDB Brewery API Endpoints
 ```
-GET /api/breweries/search?city={city}
+POST /api/breweries/distance?per_page={number}
+Request Body: coordinates:{
+  latitude: number
+  longitude: number
+}
 Response: List of breweries in the specified city
 
 GET /api/breweries/{id}
 Response: Detailed information about a specific brewery
 ```
 
-#### Restaurant Endpoints (To be implemented)
+#### Yelp Restaurants API Endpoints
 ```
-GET /api/restaurants?lat={latitude}&lon={longitude}
-Response: List of restaurants near the specified coordinates
+POST /api/yelp/restaurants/nearby?limit={number}
+Request Body: coordinates:{
+  latitude: number
+  longitude: number
+}
+Response: List of restaurants nearby
+
+GET /api/yelp/{id}
+Response: Restaurants nearest the specified coordinates
 ```
 
 ### 5.2 Error Handling
