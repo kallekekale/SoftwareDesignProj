@@ -6,7 +6,6 @@ import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceRes
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
-// import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundWithDistException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -60,12 +59,11 @@ public class YelpPlacesService {
       Map<String, String> headers = Map.of("Authorization", "Bearer " + yelpApiKey);
       YelpSearchResponse response = httpRequester.get(url, YelpSearchResponse.class, headers);
 
-      if (response == null || response.getBusinesses() == null) {
-        throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-        // throw new BusinessNotFoundNearbyException(coordinates);
+      if (response == null || response.businesses() == null) {
+        throw new BusinessNotFoundException(coordinates);
       }
 
-      return response.getBusinesses().stream()
+      return response.businesses().stream()
           .map(
               b ->
                   new YelpBusinessDistanceResponseDto(
@@ -79,8 +77,7 @@ public class YelpPlacesService {
           .collect(Collectors.toList());
     } catch (Exception e) {
       logger.error("Error fetching nearby Yelp restaurants for: {}", coordinates, e);
-      throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-      // throw new BusinessNotFoundNearbyException(coordinates);
+      throw new BusinessNotFoundException(coordinates);
     }
   }
 }
