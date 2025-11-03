@@ -1,18 +1,26 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "Auto-formatting code..."
+echo "Auto-formatting changed files..."
 
-# Format backend (Spotless)
-echo "Formatting backend..."
-cd backend && ./mvnw spotless:apply
+# Check if there are backend changes
+if git diff --cached --name-only | grep -q "^backend/"; then
+  echo "Formatting backend..."
+  cd backend && ./mvnw spotless:apply
+  cd ..
+  git add backend/
+else
+  echo "Skipping backend (no changes)"
+fi
 
-# Format frontend (Prettier)
-echo "Formatting frontend..."
-cd ../frontend && pnpm prettier:write
+# Check if there are frontend changes
+if git diff --cached --name-only | grep -q "^frontend/"; then
+  echo "Formatting frontend..."
+  cd frontend && pnpm prettier:write
+  cd ..
+  git add frontend/
+else
+  echo "Skipping frontend (no changes)"
+fi
 
-# Add formatted files back to staging
-cd ..
-git add -u
-
-echo "Code formatted and staged!"
+echo "Done!"
