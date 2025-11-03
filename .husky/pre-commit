@@ -1,26 +1,60 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "Auto-formatting changed files..."
+echo "🔍 Checking code quality..."
+
+BACKEND_FAILED=0
+FRONTEND_FAILED=0
+
+# Detect Maven wrapper command (cross-platform)
+if [ -f "backend/mvnw.cmd" ] && [ "$OS" = "Windows_NT" ]; then
+  MVN_CMD="mvnw.cmd"
+else
+  MVN_CMD="./mvnw"
+fi
 
 # Check if there are backend changes
 if git diff --cached --name-only | grep -q "^backend/"; then
-  echo "Formatting backend..."
-  cd backend && ./mvnw spotless:apply
+  echo "📦 Checking backend formatting..."
+  cd backend && $MVN_CMD spotless:check
+  if [ $? -ne 0 ]; then
+    BACKEND_FAILED=1
+    echo "❌ Backend formatting check failed!"
+    echo "   Fix with: cd backend && $MVN_CMD spotless:apply"
+  fi
   cd ..
-  git add backend/
 else
-  echo "Skipping backend (no changes)"
+  echo "⏭️  Skipping backend (no changes)"
 fi
 
 # Check if there are frontend changes
 if git diff --cached --name-only | grep -q "^frontend/"; then
-  echo "Formatting frontend..."
-  cd frontend && pnpm prettier:write
+  echo "⚛️  Checking frontend formatting and linting..."
+  cd frontend
+  
+  pnpm prettier:check
+  if [ $? -ne 0 ]; then
+    FRONTEND_FAILED=1
+    echo "❌ Frontend formatting check failed!"
+    echo "   Fix with: cd frontend && pnpm prettier:write"
+  fi
+  
+  pnpm lint
+  if [ $? -ne 0 ]; then
+    FRONTEND_FAILED=1
+    echo "❌ Frontend linting failed!"
+  fi
+  
   cd ..
-  git add frontend/
 else
-  echo "Skipping frontend (no changes)"
+  echo "⏭️  Skipping frontend (no changes)"
 fi
 
-echo "Done!"
+# Exit with error if any checks failed
+if [ $BACKEND_FAILED -eq 1 ] || [ $FRONTEND_FAILED -eq 1 ]; then
+  echo ""
+  echo "❌ Pre-commit checks failed! Please fix the issues above."
+  exit 1
+fi
+
+echo "✅ All checks passed!"
