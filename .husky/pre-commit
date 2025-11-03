@@ -1,7 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "🔍 Checking code quality..."
+echo "Checking code quality..."
 
 BACKEND_FAILED=0
 FRONTEND_FAILED=0
@@ -15,46 +15,46 @@ fi
 
 # Check if there are backend changes
 if git diff --cached --name-only | grep -q "^backend/"; then
-  echo "📦 Checking backend formatting..."
+  echo "Checking backend formatting..."
   cd backend && $MVN_CMD spotless:check
   if [ $? -ne 0 ]; then
     BACKEND_FAILED=1
-    echo "❌ Backend formatting check failed!"
+    echo "Backend formatting check failed!"
     echo "   Fix with: cd backend && $MVN_CMD spotless:apply"
   fi
   cd ..
 else
-  echo "⏭️  Skipping backend (no changes)"
+  echo "Skipping backend (no changes)"
 fi
 
 # Check if there are frontend changes
 if git diff --cached --name-only | grep -q "^frontend/"; then
-  echo "⚛️  Checking frontend formatting and linting..."
+  echo "Checking frontend formatting and linting..."
   cd frontend
   
   pnpm prettier:check
   if [ $? -ne 0 ]; then
     FRONTEND_FAILED=1
-    echo "❌ Frontend formatting check failed!"
-    echo "   Fix with: cd frontend && pnpm prettier:write"
+    echo "Frontend formatting check failed!"
+    echo "Fix with: cd frontend && pnpm prettier:write"
   fi
   
   pnpm lint
   if [ $? -ne 0 ]; then
     FRONTEND_FAILED=1
-    echo "❌ Frontend linting failed!"
+    echo "Frontend linting failed!"
   fi
   
   cd ..
 else
-  echo "⏭️  Skipping frontend (no changes)"
+  echo "Skipping frontend (no changes)"
 fi
 
 # Exit with error if any checks failed
 if [ $BACKEND_FAILED -eq 1 ] || [ $FRONTEND_FAILED -eq 1 ]; then
   echo ""
-  echo "❌ Pre-commit checks failed! Please fix the issues above."
+  echo "Pre-commit checks failed! Please fix the issues above."
   exit 1
 fi
 
-echo "✅ All checks passed!"
+echo "All checks passed!"
