@@ -1,0 +1,18 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🎨 Auto-formatting code..."
+
+# Format backend (Spotless)
+echo "📦 Formatting backend..."
+cd backend && ./mvnw spotless:apply
+
+# Format frontend (Prettier)
+echo "⚛️  Formatting frontend..."
+cd ../frontend && pnpm prettier:write
+
+# Add formatted files back to staging
+cd ..
+git add -u
+
+echo "✅ Code formatted and staged!"
