@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Check if there are backend changes
+if ! git diff --cached --name-only | grep -q "^backend/"; then
+  echo "Skipping backend (no changes)"
+  exit 0
+fi
+
+echo "Checking backend formatting..."
+
+# Detect Maven wrapper command (cross-platform)
+if [ -f "backend/mvnw.cmd" ] && [ "$OS" = "Windows_NT" ]; then
+  MVN_CMD="mvnw.cmd"
+else
+  MVN_CMD="./mvnw"
+fi
+
+cd backend && $MVN_CMD spotless:check
+
+if [ $? -ne 0 ]; then
+  echo "Backend formatting check failed!"
+  echo "Fix with: cd backend && $MVN_CMD spotless:apply"
+  exit 1
+fi
+
+echo "✅ Backend checks passed!"
+exit 0

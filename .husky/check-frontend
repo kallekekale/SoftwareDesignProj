@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Check if there are frontend changes
+if ! git diff --cached --name-only | grep -q "^frontend/"; then
+  echo "Skipping frontend (no changes)"
+  exit 0
+fi
+
+echo "Checking frontend formatting and linting..."
+
+cd frontend
+
+FAILED=0
+
+pnpm prettier:check
+if [ $? -ne 0 ]; then
+  FAILED=1
+  echo "Frontend formatting check failed!"
+  echo "Fix with: cd frontend && pnpm prettier:write"
+fi
+
+pnpm lint
+if [ $? -ne 0 ]; then
+  FAILED=1
+  echo "Frontend linting failed!"
+fi
+
+if [ $FAILED -eq 1 ]; then
+  exit 1
+fi
+
+echo "Frontend checks passed!"
+exit 0

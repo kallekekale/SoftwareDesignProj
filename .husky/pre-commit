@@ -1,59 +1,22 @@
 #!/bin/sh
 
-echo "Checking code quality..."
+echo "Running pre-commit checks..."
 
-BACKEND_FAILED=0
-FRONTEND_FAILED=0
+# Run backend checks
+.husky/check-backend
+BACKEND_STATUS=$?
 
-# Detect Maven wrapper command (cross-platform)
-if [ -f "backend/mvnw.cmd" ] && [ "$OS" = "Windows_NT" ]; then
-  MVN_CMD="mvnw.cmd"
-else
-  MVN_CMD="./mvnw"
-fi
-
-# Check if there are backend changes
-if git diff --cached --name-only | grep -q "^backend/"; then
-  echo "Checking backend formatting..."
-  cd backend && $MVN_CMD spotless:check
-  if [ $? -ne 0 ]; then
-    BACKEND_FAILED=1
-    echo "Backend formatting check failed!"
-    echo "   Fix with: cd backend && $MVN_CMD spotless:apply"
-  fi
-  cd ..
-else
-  echo "Skipping backend (no changes)"
-fi
-
-# Check if there are frontend changes
-if git diff --cached --name-only | grep -q "^frontend/"; then
-  echo "Checking frontend formatting and linting..."
-  cd frontend
-  
-  pnpm prettier:check
-  if [ $? -ne 0 ]; then
-    FRONTEND_FAILED=1
-    echo "Frontend formatting check failed!"
-    echo "Fix with: cd frontend && pnpm prettier:write"
-  fi
-  
-  pnpm lint
-  if [ $? -ne 0 ]; then
-    FRONTEND_FAILED=1
-    echo "Frontend linting failed!"
-  fi
-  
-  cd ..
-else
-  echo "Skipping frontend (no changes)"
-fi
+# Run frontend checks
+.husky/check-frontend
+FRONTEND_STATUS=$?
 
 # Exit with error if any checks failed
-if [ $BACKEND_FAILED -eq 1 ] || [ $FRONTEND_FAILED -eq 1 ]; then
+if [ $BACKEND_STATUS -ne 0 ] || [ $FRONTEND_STATUS -ne 0 ]; then
   echo ""
-  echo "Pre-commit checks failed! Please fix the issues above."
+  echo "Pre-commit checks failed!"
   exit 1
 fi
 
-echo "All checks passed!"
+echo ""
+echo "All pre-commit checks passed!"
+exit 0
