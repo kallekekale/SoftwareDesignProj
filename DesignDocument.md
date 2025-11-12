@@ -16,7 +16,49 @@ The goal of this application is to let a user pick a city and then browse brewer
 
 ### 1.1 Use Case Diagrams
 
-TODO!
+#### Main Use Case Diagram
+
+```
+        ┌─────────────────┐
+        │      User       │
+        └────────┬────────┘
+                 │
+        ┌────────┴────────┐
+        │                 │
+        ▼                 ▼
+   ┌─────────────┐  ┌──────────────────┐
+   │ Select City │  │ Search Breweries │
+   └─────────────┘  │   in City        │
+        │           └──────────────────┘
+        │                 │
+        ▼                 ▼
+   ┌─────────────────────────────┐
+   │  View Brewery List          │
+   │  (sorted by distance)       │
+   └────────────┬────────────────┘
+                │
+                ▼
+        ┌──────────────────┐
+        │ Select Brewery   │
+        └────────┬─────────┘
+                 │
+                 ▼
+        ┌──────────────────────┐
+        │ View Brewery Details │
+        └────────┬─────────────┘
+                 │
+                 ▼
+        ┌──────────────────────────┐
+        │ Search Nearby            │
+        │ Restaurants (by Yelp)    │
+        └────────┬─────────────────┘
+                 │
+                 ▼
+        ┌──────────────────────────┐
+        │ View Restaurant List     │
+        │ (sorted by proximity)    │
+        └──────────────────────────┘
+```
 
 ## 2. Data Sources & APIs
 
@@ -169,9 +211,13 @@ Response: Details for a specific Yelp business
 
 Who did what, responsibilities and roles.
 
-| Member | Responsibility | Deliverables | Timeline |
-|--------|-----------------|--------------|----------|
-|        |                 |              |          |
+#### Wilhelm
+
+- Restructured design document.
+- Planned what needs to be done for the midterm submission.
+- Wrote about AI usage.
+- Made the main use case diagram.
+- Documented extra work.
 
 ### 6.2 Self-Assessment
 
@@ -183,10 +229,37 @@ TODO
 
 ### 6.4 Extra Work
 
-TODO
+Beyond the original plan, we implemented enhanced restaurant information retrieval from the Yelp API. Rather than displaying only basic proximity data, we extended the restaurant list feature to fetch and present detailed information about each establishment when selected by the user.
+
+**Feature: Detailed Restaurant Information**
+
+When a user selects a restaurant from the nearby restaurants list, the application now retrieves comprehensive details from Yelp, including:
+- TODO
+
+**Implementation Details:**
+
+The feature required creating an additional endpoint... TODO
+
+**Documentation**
+
+We made the documention much more comprehensive than required in the submission guidelines.
 
 ### 6.5 AI Usage
 
-Where AI was used (e.g., drafting Sections 4–5, code generation, refactoring ideas). Include:
-- Models/tools used
-- Human review process
+**Tools used**
+- GitHub Copilot
+- ChatGPT 5
+- Claude 4.5
+
+**Application Areas**
+- Translating text to English.
+- Design Document drafting (Sections 4-5).
+- Inline comments.
+- Implementing APIs.
+- Frontend drafting.
+- Making diagrams look formatted.
+
+**Human Review**
+- All AI-generated content underwent thorough review to ensure accuracy, relevance, and alignment with project requirements.
+
+No sensitive data was shared with AI
