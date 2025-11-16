@@ -223,6 +223,25 @@ Who did what, responsibilities and roles.
 
 What went well, what didn't, key learnings, technical trade-offs, team collaboration.
 
+Overall the project is progressing well. We met the primary goals for the midterm: the core brewery lookup flow is implemented end-to-end, and the extra feature to surface detailed restaurant information has been successfully integrated. Documentation is in good shape and has been expanded to reflect design decisions and the new functionality, which has helped keep everyone aligned.
+
+What went well
+- Feature implementation: The additional restaurant-detail feature was implemented cleanly and integrated into the existing backend and frontend flow.
+- Documentation: The design and API documentation were improved alongside the implementation, making it easier to understand how the services interact and how to extend them.
+- Collaboration: The team has collaborated effectively using GitHub, pull requests, and code reviews. Regular check-ins and distributed responsibilities helped maintain steady progress.
+
+Challenges and minor issues
+- Integration complexity: Adding extra API calls required careful design to avoid duplicating logic and to keep error handling consistent; this introduced more integration work than initially expected.
+- API management: Handling external API keys, rate limits, and differing response shapes (Open Brewery DB vs. Yelp) required extra testing.
+- Communication hiccups: Small miscommunications occurred, which occasionally led to small merge conflicts.
+
+Key learnings
+- Modular service design matters: Encapsulating external API logic in dedicated services (HttpRequester, YelpService, OpenBreweryDbService) makes adding functionality less risky and easier to test.
+- Clear API contracts and examples prevent rework: Keeping the API design and example payloads up-to-date in the documentation helped preventing ambiguities.
+- Prioritize error handling and UX for degraded external services: Designing consistent error responses and graceful UI fallbacks improves resilience when third-party services fail or are rate-limited.
+
+Overall, the team is on track. The implementation of the additional feature and the improved documentation show solid progress, and the small communication issues are addressable with minor process adjustments.
+
 ### 6.3 Changes to the Original Plan
 
 TODO
