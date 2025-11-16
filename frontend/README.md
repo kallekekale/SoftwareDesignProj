@@ -18,11 +18,13 @@ A React + TypeScript + Vite application that finds the 10 closest breweries from
 ## Running the Application
 
 1. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 2. **Start the development server:**
+
    ```bash
    pnpm dev
    ```
@@ -44,6 +46,7 @@ A React + TypeScript + Vite application that finds the 10 closest breweries from
 ## Mocked Locations
 
 The application comes with three predefined locations:
+
 - **Brooklyn, NY** (40.6782°N, 73.9442°W)
 - **Manhattan, NY** (40.7831°N, 73.9712°W)
 - **Downtown LA** (34.0407°N, 118.2468°W)
@@ -51,6 +54,7 @@ The application comes with three predefined locations:
 ## API Integration
 
 The frontend communicates with the backend API via Vite proxy:
+
 - **Endpoint**: `POST /api/breweries/distance`
 - **Request**: Coordinates (latitude, longitude)
 - **Response**: List of breweries with calculated distances
