@@ -143,10 +143,6 @@ This section answers: Which data sources will be used and how?
 4. Backend fetches restaurant data from Yelp API
 5. Frontend displays combined results to the user
 
-### 4.4 Design Patterns
-
-TODO
-
 ## 5. API Design
 
 ### 5.1 Backend REST Endpoints
@@ -232,6 +228,10 @@ Challenges and minor issues
 - Integration complexity: Adding extra API calls required careful design to avoid duplicating logic and to keep error handling consistent; this introduced more integration work than initially expected.
 - API management: Handling external API keys, rate limits, and differing response shapes (Open Brewery DB vs. Yelp) required extra testing.
 - Communication hiccups: Small miscommunications occurred, which occasionally led to small merge conflicts.
+
+Team availability and coordination
+- Throughout the project everyone has been balancing other studies and work commitments, but we have managed to achieve our planned goals by proactively sharing availability and progress updates.
+- By informing each other about when we are available or busy, the team avoided major scheduling conflicts. This transparency meant tasks were reassigned or sequenced when necessary, and everyone contributed their part to move the project forward.
 
 Key learnings
 - Modular service design matters: Encapsulating external API logic in dedicated services (HttpRequester, YelpService, OpenBreweryDbService) makes adding functionality less risky and easier to test.
