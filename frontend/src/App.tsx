@@ -23,7 +23,7 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState<Coordinates | null>(
-    null
+    null,
   );
   const [gettingLocation, setGettingLocation] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
@@ -60,7 +60,7 @@ function App() {
       (error) => {
         setLocationError(`Unable to get location: ${error.message}`);
         setGettingLocation(false);
-      }
+      },
     );
   };
 

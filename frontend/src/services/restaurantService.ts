@@ -11,7 +11,7 @@ class RestaurantService {
    */
   async getRestaurantsByDistance(
     coordinates: Coordinates,
-    limit: number = 10
+    limit: number = 10,
   ): Promise<Restaurant[]> {
     const response = await fetch(
       `${this.baseUrl}/restaurants/nearby?limit=${limit}`,
@@ -21,7 +21,7 @@ class RestaurantService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(coordinates),
-      }
+      },
     );
 
     if (!response.ok) {

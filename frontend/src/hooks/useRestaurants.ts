@@ -4,7 +4,7 @@ import type { Coordinates } from "../types/restaurant";
 
 export const useRestaurants = (
   coordinates: Coordinates,
-  limit: number = 10
+  limit: number = 10,
 ) => {
   return useQuery({
     queryKey: ["restaurants", coordinates, limit],

@@ -39,12 +39,6 @@ export const RestaurantList = ({
           <div key={restaurant.id} className="restaurant-card">
             <div className="restaurant-header">
               <h3>{restaurant.name}</h3>
-              {restaurant.is_closed && (
-                <span className="status-badge closed">Closed</span>
-              )}
-              {restaurant.is_closed === false && (
-                <span className="status-badge open">Open</span>
-              )}
             </div>
 
             {restaurant.image_url && (
@@ -67,7 +61,10 @@ export const RestaurantList = ({
               </div>
 
               <div className="location">
-                <p>{restaurant.location.display_address.join(", ")}</p>
+                <p>
+                  {restaurant.location.display_address?.join(", ") ||
+                    "Address not available"}
+                </p>
               </div>
 
               <div className="distance">
