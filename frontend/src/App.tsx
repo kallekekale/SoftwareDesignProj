@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchBreweriesByDistance } from "./services/breweryService";
+import { useBreweries } from "./hooks/useBreweries";
 import type { Coordinates, BreweryWithDistance } from "./types/brewery";
 import "./App.css";
 
@@ -27,15 +26,7 @@ function App() {
   const [gettingLocation, setGettingLocation] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
-  const {
-    data: breweries,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["breweries", selectedLocation],
-    queryFn: () => fetchBreweriesByDistance(selectedLocation!, 10),
-    enabled: selectedLocation !== null,
-  });
+  const { data: breweries, isLoading, error } = useBreweries(selectedLocation);
 
   const handleLocationClick = (coordinates: Coordinates) => {
     setSelectedLocation(coordinates);

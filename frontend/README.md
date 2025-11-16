@@ -1,73 +1,109 @@
-# React + TypeScript + Vite
+# Brewery Finder - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript + Vite application that finds the 10 closest breweries from a selected location.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Location Selection**: Choose from predefined mocked locations
+- **Current Location**: Use browser geolocation to find nearby breweries
+- **Brewery Search**: Fetches the 10 closest breweries from the selected location
+- **Distance Display**: Shows the distance in kilometers for each brewery
+- **Brewery Details**: Displays brewery name, type, address, and location information
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Backend API running on `http://localhost:8080`
+- Node.js 18+ and pnpm installed
 
-## Expanding the ESLint configuration
+## Running the Application
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+2. **Start the development server:**
+   ```bash
+   pnpm dev
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3. **Open in browser:**
+   Navigate to `http://localhost:5173`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## How to Use
+
+1. **Select a Location**: Click on one of the location buttons (Brooklyn, Manhattan, or Downtown LA)
+2. **Use Current Location**: Click "📍 My Current Location" to use your browser's geolocation
+3. **View Results**: The app will fetch and display the 10 closest breweries
+4. **Check Details**: Each brewery shows:
+   - Name and type
+   - City and state/country
+   - Street address (if available)
+   - Distance in kilometers
+
+## Mocked Locations
+
+The application comes with three predefined locations:
+- **Brooklyn, NY** (40.6782°N, 73.9442°W)
+- **Manhattan, NY** (40.7831°N, 73.9712°W)
+- **Downtown LA** (34.0407°N, 118.2468°W)
+
+## API Integration
+
+The frontend communicates with the backend API via Vite proxy:
+- **Endpoint**: `POST /api/breweries/distance`
+- **Request**: Coordinates (latitude, longitude)
+- **Response**: List of breweries with calculated distances
+
+The Vite proxy forwards requests from `/api` to `http://localhost:8080`, avoiding CORS issues during development.
+
+## Tech Stack
+
+- **React 19**: UI library with hooks
+- **TypeScript**: Type-safe development
+- **Vite**: Fast build tool and dev server with proxy configuration
+- **TanStack Query**: Data fetching, caching, and state management
+- **Custom Hooks**: `useBreweries` for encapsulated data fetching logic
+- **Singleton Service Pattern**: `breweryService` for API calls
+- **CSS**: Custom styling with consistent design system
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── hooks/
+│   │   └── useBreweries.ts         # Custom hook for brewery data fetching
+│   ├── services/
+│   │   └── breweryService.ts       # Singleton service for API calls
+│   ├── types/
+│   │   └── brewery.ts              # TypeScript type definitions
+│   ├── lib/
+│   │   └── queryClient.ts          # TanStack Query configuration
+│   ├── App.tsx                     # Main application component
+│   ├── App.css                     # Application styles
+│   ├── index.css                   # Global styles
+│   └── main.tsx                    # Application entry point
+├── public/                         # Static assets
+└── vite.config.ts                  # Vite configuration with proxy
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Available Scripts
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+- `pnpm dev` - Start the development server
+- `pnpm build` - Build for production
+- `pnpm preview` - Preview the production build
+- `pnpm lint` - Run ESLint
+- `pnpm prettier:check` - Check code formatting
+- `pnpm prettier:write` - Format code with Prettier
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Development
+
+To modify the mocked locations, edit the `MOCKED_LOCATIONS` array in `src/App.tsx`:
+
+```typescript
+const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
+  { name: "Your City", coordinates: { latitude: 0, longitude: 0 } },
+  // Add more locations...
+];
 ```
