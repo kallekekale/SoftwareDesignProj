@@ -32,5 +32,4 @@ class BreweryService {
   }
 }
 
-// Export singleton instance
 export const breweryService = new BreweryService();
