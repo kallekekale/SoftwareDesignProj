@@ -215,6 +215,11 @@ Who did what, responsibilities and roles.
 - Made the main use case diagram.
 - Documented extra work.
 
+#### Nandan
+
+- Implemented and merged small frontend reconsturction
+- Documented self-assesment, changes to original plan and extra work.
+
 ### 6.2 Self-Assessment
 
 Overall the project is progressing well. We met the primary goals for the midterm: the core brewery lookup flow is implemented end-to-end, and the extra feature to surface detailed restaurant information has been successfully integrated. Documentation is in good shape and has been expanded to reflect design decisions and the new functionality, which has helped keep everyone aligned.
