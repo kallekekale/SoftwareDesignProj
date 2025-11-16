@@ -242,7 +242,16 @@ Overall, the team is on track. The implementation of the additional feature and 
 
 ### 6.3 Changes to the Original Plan
 
-TODO
+During development we made a deliberate shift from one of our original feature goals. The midterm plan included adding an interactive map view that would display breweries and nearby restaurants visually. After early investigation and prioritization discussions, the team decided to postpone the map and instead invest the same effort in enriching restaurant details (website link, price category and opening hours). The change was driven by a desire to deliver higher immediate user value within the same time budget.
+
+What changed
+- Deferred: Interactive map view (showing brewery and restaurant markers on a map).
+- Added (in place of the map): Detailed restaurant information surfaced from Yelp — specifically website links, price tiers, and opening hours — implemented as described in Section 6.4.
+
+Reasons for the change
+- Implementation complexity: A robust map integration requires additional dependencies (map library, map tiles or provider such as Mapbox/OpenStreetMap), correct handling of coordinate projections and markers, mobile/responsive UI work, and additional API/configuration work for map keys and usage quotas.
+- Higher perceived user value: The team judged that surfacing concrete decision-making information (website, price, hours) would be immediately more useful for users choosing a restaurant than a map visualization at the midterm stage.
+- Lower risk to core flow: Adding restaurant details reused existing Yelp endpoints and fit naturally into our current backend/service structure, whereas a map would have required new cross-cutting UI and UX work and more integration testing.
 
 ### 6.4 Extra Work
 
