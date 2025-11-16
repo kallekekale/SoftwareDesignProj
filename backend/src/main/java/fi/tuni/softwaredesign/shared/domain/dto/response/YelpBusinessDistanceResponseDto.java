@@ -10,4 +10,6 @@ public record YelpBusinessDistanceResponseDto(
     @JsonProperty("review_count") int reviewCount,
     double distance,
     YelpLocationDto location,
-    @JsonProperty("image_url") String imageUrl) {}
+    @JsonProperty("image_url") String imageUrl,
+    String price,
+    String url) {}
