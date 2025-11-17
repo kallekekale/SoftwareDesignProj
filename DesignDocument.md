@@ -221,6 +221,11 @@ Who did what, responsibilities and roles.
 - Made the main use case diagram.
 - Documented extra work.
 
+#### Juho
+
+- Created structure for backend implementing global error handling, generic http requester, initial brewery CRUD DTOs
+- Rewieved the PRs of other members 
+
 #### Nandan
 
 - Implemented and merged small frontend reconsturction
