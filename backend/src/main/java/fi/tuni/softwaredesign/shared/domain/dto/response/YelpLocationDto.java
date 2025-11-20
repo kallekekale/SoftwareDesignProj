@@ -1,6 +1,7 @@
 package fi.tuni.softwaredesign.shared.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 /** DTO representing a business's location information from the Yelp Fusion API. */
 public record YelpLocationDto(
@@ -10,4 +11,5 @@ public record YelpLocationDto(
     String city,
     String state,
     @JsonProperty("zip_code") String zipCode,
-    String country) {}
+    String country,
+    @JsonProperty("display_address") List<String> displayAddress) {}
