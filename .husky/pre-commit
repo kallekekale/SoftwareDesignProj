@@ -1,0 +1,22 @@
+#!/bin/sh
+
+echo "Running pre-commit checks..."
+
+# Run backend checks
+.husky/check-backend
+BACKEND_STATUS=$?
+
+# Run frontend checks
+.husky/check-frontend
+FRONTEND_STATUS=$?
+
+# Exit with error if any checks failed
+if [ $BACKEND_STATUS -ne 0 ] || [ $FRONTEND_STATUS -ne 0 ]; then
+  echo ""
+  echo "Pre-commit checks failed!"
+  exit 1
+fi
+
+echo ""
+echo "All pre-commit checks passed!"
+exit 0
