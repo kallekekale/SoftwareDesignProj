@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useBreweries } from "../hooks/useBreweries";
+import { useLocationStore } from "../stores/locationStore";
 import type { BreweryWithDistance, Coordinates } from "../types/brewery";
 
 // Mocked locations
@@ -19,41 +19,20 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 ];
 
 export default function BreweryList() {
-  const [selectedLocation, setSelectedLocation] = useState<Coordinates | null>(
-    null
+  const selectedLocation = useLocationStore((state) => state.selectedLocation);
+  const isGettingCurrentLocation = useLocationStore(
+    (state) => state.isGettingCurrentLocation
   );
-  const [gettingLocation, setGettingLocation] = useState(false);
-  const [locationError, setLocationError] = useState<string | null>(null);
+  const locationError = useLocationStore((state) => state.locationError);
+  const setLocation = useLocationStore((state) => state.setLocation);
+  const getCurrentLocation = useLocationStore(
+    (state) => state.getCurrentLocation
+  );
 
   const { data: breweries, isLoading, error } = useBreweries(selectedLocation);
 
   const handleLocationClick = (coordinates: Coordinates) => {
-    setSelectedLocation(coordinates);
-    setLocationError(null);
-  };
-
-  const handleCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser");
-      return;
-    }
-
-    setGettingLocation(true);
-    setLocationError(null);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setSelectedLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        setGettingLocation(false);
-      },
-      (error) => {
-        setLocationError(`Unable to get location: ${error.message}`);
-        setGettingLocation(false);
-      }
-    );
+    setLocation(coordinates);
   };
 
   return (
@@ -72,11 +51,13 @@ export default function BreweryList() {
           </button>
         ))}
         <button
-          onClick={handleCurrentLocation}
+          onClick={getCurrentLocation}
           className="location-button current-location-button"
-          disabled={gettingLocation}
+          disabled={isGettingCurrentLocation}
         >
-          {gettingLocation ? "Getting location..." : "📍 My Current Location"}
+          {isGettingCurrentLocation
+            ? "Getting location..."
+            : "📍 My Current Location"}
         </button>
       </div>
 
