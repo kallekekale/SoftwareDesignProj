@@ -11,7 +11,7 @@ class BreweryService {
    */
   async getBreweriesByDistance(
     coordinates: Coordinates,
-    perPage: number = 10,
+    perPage: number = 10
   ): Promise<BreweryWithDistance[]> {
     const response = await fetch(
       `${this.baseUrl}/distance?per_page=${perPage}`,
@@ -21,7 +21,7 @@ class BreweryService {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(coordinates),
-      },
+      }
     );
 
     if (!response.ok) {

@@ -10,7 +10,7 @@ import type { Coordinates } from "../types/brewery";
  */
 export const useBreweries = (
   coordinates: Coordinates | null,
-  perPage: number = 10,
+  perPage: number = 10
 ) => {
   return useQuery({
     queryKey: ["breweries", coordinates, perPage],
