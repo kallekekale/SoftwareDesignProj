@@ -1,0 +1,29 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: softwaredesign-frontend
+    depends_on:
+      backend:
+        condition: service_started
+
+  backend:
+    build:
+      context: ./backend
+      target: softwaeredesign-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      LOGGING_LEVEL_FI_TUNI_SOFTWAREDESIGN: INFO
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
