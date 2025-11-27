@@ -10,7 +10,9 @@ export default function RestaurantList() {
   const navigate = useNavigate();
   const { breweryName } = useParams<{ breweryName: string }>();
   const location = useLocation();
-  const breweryCoordinates = location.state?.coordinates as Coordinates | undefined;
+  const breweryCoordinates = location.state?.coordinates as
+    | Coordinates
+    | undefined;
 
   const {
     data: restaurants,
