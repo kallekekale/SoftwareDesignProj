@@ -2,6 +2,7 @@ package fi.tuni.softwaredesign.shared.config;
 
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundException;
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundWithDistException;
+import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,24 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleBreweryNotFoundWithDistException(
       BreweryNotFoundWithDistException ex, WebRequest request) {
     logger.error("Brewery not found with coordinates: " + ex.getCoordinates(), ex);
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(
+            new ErrorResponse(
+                LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage()));
+  }
+
+  @ExceptionHandler(BusinessNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleBusinessNotFoundException(
+      BusinessNotFoundException ex, WebRequest request) {
+
+    if (ex.getBusinessId() != null) {
+      logger.error("Business not found with ID: {}", ex.getBusinessId(), ex);
+    } else if (ex.getCoordinates() != null) {
+      logger.error("No businesses found near coordinates: {}", ex.getCoordinates(), ex);
+    } else {
+      logger.error("Business not found: {}", ex.getMessage(), ex);
+    }
+
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(
             new ErrorResponse(

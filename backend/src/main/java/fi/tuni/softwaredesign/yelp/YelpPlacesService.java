@@ -1,12 +1,11 @@
 package fi.tuni.softwaredesign.yelp;
 
-import fi.tuni.softwaredesign.distance.DistanceService;
 import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceResponseDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
+import fi.tuni.softwaredesign.shared.domain.dto.response.YelpSearchResponse;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
-// import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundWithDistException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,14 +21,12 @@ public class YelpPlacesService {
 
   private static final String BASE_URL = "https://api.yelp.com/v3/businesses";
   private final HttpRequester httpRequester;
-  private final DistanceService distanceService;
 
   @Value("${yelp.api.key}")
   private String yelpApiKey;
 
-  public YelpPlacesService(HttpRequester httpRequester, DistanceService distanceService) {
+  public YelpPlacesService(HttpRequester httpRequester) {
     this.httpRequester = httpRequester;
-    this.distanceService = distanceService;
   }
 
   /** Get a single business by its Yelp ID. */
@@ -60,12 +57,11 @@ public class YelpPlacesService {
       Map<String, String> headers = Map.of("Authorization", "Bearer " + yelpApiKey);
       YelpSearchResponse response = httpRequester.get(url, YelpSearchResponse.class, headers);
 
-      if (response == null || response.getBusinesses() == null) {
-        throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-        // throw new BusinessNotFoundNearbyException(coordinates);
+      if (response == null || response.businesses() == null) {
+        throw new BusinessNotFoundException(coordinates);
       }
 
-      return response.getBusinesses().stream()
+      return response.businesses().stream()
           .map(
               b ->
                   new YelpBusinessDistanceResponseDto(
@@ -79,8 +75,7 @@ public class YelpPlacesService {
           .collect(Collectors.toList());
     } catch (Exception e) {
       logger.error("Error fetching nearby Yelp restaurants for: {}", coordinates, e);
-      throw new RuntimeException("No businesses found near coordinates: " + coordinates);
-      // throw new BusinessNotFoundNearbyException(coordinates);
+      throw new BusinessNotFoundException(coordinates);
     }
   }
 }
