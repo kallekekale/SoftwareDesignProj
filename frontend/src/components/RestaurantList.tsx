@@ -1,6 +1,7 @@
 import { useRestaurants } from "../hooks/useRestaurants";
 import type { Coordinates } from "../types/brewery";
 import type { YelpRestaurant } from "../types/restaurant";
+import { formatTime } from "../lib/utils";
 
 interface RestaurantListProps {
   breweryCoordinates: Coordinates;
@@ -9,13 +10,6 @@ interface RestaurantListProps {
 }
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-function formatTime(time: string): string {
-  // Convert format from "1730" to "17:30" (24-hour format)
-  const hours = time.substring(0, 2);
-  const minutes = time.substring(2, 4);
-  return `${hours}:${minutes}`;
-}
 
 export default function RestaurantList({
   breweryCoordinates,
