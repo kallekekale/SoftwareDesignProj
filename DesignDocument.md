@@ -218,13 +218,37 @@ This section answers: Which data sources will be used and how?
 
 **Component Responsibilities:**
 
-- **UI Layer (Frontend):** Renders brewery and restaurant information to users
-- **Hooks & State:** Manage data fetching, caching, and location selection
-- **Services (Frontend):** Handle API communication and state management
-- **Controllers (Backend):** Expose REST endpoints and handle HTTP requests
-- **Business Services (Backend):** Implement core business logic and data processing
-- **Infrastructure (Backend):** Provide reusable utilities for HTTP communication and error handling
-- **External APIs:** Third-party data sources for breweries and restaurants
+**Frontend:**
+
+- **UI Layer:**
+  - **App (Router):** Application shell with React Router for navigation between views
+  - **BreweryList:** Primary display component for rendering brewery information and location selection
+- **Custom Hooks:**
+  - **useBreweries:** Encapsulates brewery data fetching logic and manages query state using React Query
+- **Services:**
+  - **breweryService:** Singleton service handling all API communication with the backend brewery endpoints
+  - **queryClient:** React Query configuration for data caching and synchronization
+- **State Management:**
+  - **locationStore:** Zustand store managing global location selection state
+
+**Backend:**
+
+- **REST Controllers:**
+  - **OpenBreweryDbController:** Exposes brewery-related REST endpoints (GET /api/breweries/{id}, POST /api/breweries/distance)
+  - **YelpPlacesController:** Exposes restaurant-related REST endpoints (GET/POST /api/restaurants/nearby, GET /api/restaurants/{id})
+- **Business Logic Services:**
+  - **OpenBreweryDbService:** Handles brewery data retrieval, filtering, and distance-based sorting
+  - **YelpPlacesService:** Manages restaurant search and detailed business information retrieval
+  - **DistanceService:** Performs proximity calculations between coordinates
+- **Infrastructure Services:**
+  - **HttpRequesterService:** Generic HTTP client for external API communication with retry logic
+  - **GlobalExceptionHandler:** Cross-cutting error handling for consistent error responses across all endpoints
+  - **HttpRequesterConfig:** Configuration for HTTP client including timeouts and retry strategies
+
+**External APIs:**
+
+- **Open Brewery DB:** Third-party public API providing brewery data
+- **Yelp API:** Third-party external API providing restaurant and business information
 
 ### 4.4 Data Flow (will change)
 
