@@ -24,9 +24,8 @@ public class YelpPlacesService {
   @Value("${yelp.api.key}")
   private String yelpApiKey;
 
-  public YelpPlacesService(HttpRequester httpRequester, DistanceService distanceService) {
+  public YelpPlacesService(HttpRequester httpRequester) {
     this.httpRequester = httpRequester;
-    this.distanceService = distanceService;
   }
 
   /** Get a single business by its Yelp ID. */
