@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useBreweries } from "../hooks/useBreweries";
 import { useLocationStore } from "../stores/locationStore";
 import type { BreweryWithDistance, Coordinates } from "../types/brewery";
+import RestaurantList from "./RestaurantList";
 
 // Mocked locations
 const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
@@ -19,6 +21,11 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 ];
 
 export default function BreweryList() {
+  const [selectedBrewery, setSelectedBrewery] = useState<{
+    coordinates: Coordinates;
+    name: string;
+  } | null>(null);
+
   const selectedLocation = useLocationStore((state) => state.selectedLocation);
   const isGettingCurrentLocation = useLocationStore(
     (state) => state.isGettingCurrentLocation
@@ -33,6 +40,18 @@ export default function BreweryList() {
 
   const handleLocationClick = (coordinates: Coordinates) => {
     setLocation(coordinates);
+  };
+
+  const handleBreweryClick = (brewery: BreweryWithDistance) => {
+    if (brewery.latitude && brewery.longitude) {
+      setSelectedBrewery({
+        coordinates: {
+          latitude: brewery.latitude,
+          longitude: brewery.longitude,
+        },
+        name: brewery.name,
+      });
+    }
   };
 
   return (
@@ -75,9 +94,16 @@ export default function BreweryList() {
       {breweries && breweries.length > 0 && (
         <div className="breweries-container">
           <h2>Closest Breweries</h2>
+          <p className="click-hint">
+            Click on a brewery to see nearby restaurants
+          </p>
           <ul className="brewery-list">
             {breweries.map((brewery: BreweryWithDistance, index: number) => (
-              <li key={brewery.id} className="brewery-item">
+              <li
+                key={brewery.id}
+                className="brewery-item clickable"
+                onClick={() => handleBreweryClick(brewery)}
+              >
                 <div className="brewery-rank">{index + 1}</div>
                 <div className="brewery-details">
                   <h3>{brewery.name}</h3>
@@ -100,6 +126,14 @@ export default function BreweryList() {
 
       {breweries && breweries.length === 0 && (
         <p className="status-message">No breweries found for this location.</p>
+      )}
+
+      {selectedBrewery && (
+        <RestaurantList
+          breweryCoordinates={selectedBrewery.coordinates}
+          breweryName={selectedBrewery.name}
+          onClose={() => setSelectedBrewery(null)}
+        />
       )}
     </div>
   );
