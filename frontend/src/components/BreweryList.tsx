@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useBreweries } from "../hooks/useBreweries";
 import { useLocationStore } from "../stores/locationStore";
 import type { BreweryWithDistance, Coordinates } from "../types/brewery";
@@ -19,6 +20,7 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 ];
 
 export default function BreweryList() {
+  const navigate = useNavigate();
   const selectedLocation = useLocationStore((state) => state.selectedLocation);
   const isGettingCurrentLocation = useLocationStore(
     (state) => state.isGettingCurrentLocation
@@ -33,6 +35,19 @@ export default function BreweryList() {
 
   const handleLocationClick = (coordinates: Coordinates) => {
     setLocation(coordinates);
+  };
+
+  const handleBreweryClick = (brewery: BreweryWithDistance) => {
+    if (brewery.latitude && brewery.longitude) {
+      navigate(`/restaurants/${encodeURIComponent(brewery.name)}`, {
+        state: {
+          coordinates: {
+            latitude: brewery.latitude,
+            longitude: brewery.longitude,
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -75,9 +90,16 @@ export default function BreweryList() {
       {breweries && breweries.length > 0 && (
         <div className="breweries-container">
           <h2>Closest Breweries</h2>
+          <p className="click-hint">
+            Click on a brewery to see nearby restaurants
+          </p>
           <ul className="brewery-list">
             {breweries.map((brewery: BreweryWithDistance, index: number) => (
-              <li key={brewery.id} className="brewery-item">
+              <li
+                key={brewery.id}
+                className="brewery-item clickable"
+                onClick={() => handleBreweryClick(brewery)}
+              >
                 <div className="brewery-rank">{index + 1}</div>
                 <div className="brewery-details">
                   <h3>{brewery.name}</h3>

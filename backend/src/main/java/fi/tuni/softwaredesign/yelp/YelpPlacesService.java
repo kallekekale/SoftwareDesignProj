@@ -71,7 +71,10 @@ public class YelpPlacesService {
                       b.reviewCount(),
                       b.distance(),
                       b.location(),
-                      b.imageUrl()))
+                      b.imageUrl(),
+                      b.price(),
+                      b.url(),
+                      b.businessHours()))
           .collect(Collectors.toList());
     } catch (Exception e) {
       logger.error("Error fetching nearby Yelp restaurants for: {}", coordinates, e);
