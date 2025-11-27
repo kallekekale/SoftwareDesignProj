@@ -1,35 +1,48 @@
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useRestaurants } from "../hooks/useRestaurants";
 import type { Coordinates } from "../types/brewery";
 import type { YelpRestaurant } from "../types/restaurant";
 import { formatTime } from "../lib/utils";
 
-interface RestaurantListProps {
-  breweryCoordinates: Coordinates;
-  breweryName: string;
-  onClose: () => void;
-}
-
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-export default function RestaurantList({
-  breweryCoordinates,
-  breweryName,
-  onClose,
-}: RestaurantListProps) {
+export default function RestaurantList() {
+  const navigate = useNavigate();
+  const { breweryName } = useParams<{ breweryName: string }>();
+  const location = useLocation();
+  const breweryCoordinates = location.state?.coordinates as Coordinates | undefined;
+
   const {
     data: restaurants,
     isLoading,
     error,
-  } = useRestaurants(breweryCoordinates, 10);
+  } = useRestaurants(breweryCoordinates || null, 10);
+
+  const handleGoBack = () => {
+    navigate("/");
+  };
+
+  if (!breweryCoordinates) {
+    return (
+      <div className="app-container">
+        <div className="error-message">
+          <p>No brewery coordinates provided.</p>
+          <button onClick={handleGoBack} className="location-button">
+            ← Back to Breweries
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="restaurant-overlay">
-      <div className="restaurant-modal">
+    <div className="app-container">
+      <div className="restaurant-page">
         <div className="restaurant-header">
-          <h2>Restaurants near {breweryName}</h2>
-          <button onClick={onClose} className="close-button">
-            ✕
+          <button onClick={handleGoBack} className="back-button">
+            ← Back to Breweries
           </button>
+          <h2>Restaurants near {decodeURIComponent(breweryName || "")}</h2>
         </div>
 
         {isLoading && <p className="status-message">Loading restaurants...</p>}

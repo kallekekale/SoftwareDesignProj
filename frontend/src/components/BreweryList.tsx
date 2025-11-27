@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useBreweries } from "../hooks/useBreweries";
 import { useLocationStore } from "../stores/locationStore";
 import type { BreweryWithDistance, Coordinates } from "../types/brewery";
-import RestaurantList from "./RestaurantList";
 
 // Mocked locations
 const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
@@ -21,11 +20,7 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 ];
 
 export default function BreweryList() {
-  const [selectedBrewery, setSelectedBrewery] = useState<{
-    coordinates: Coordinates;
-    name: string;
-  } | null>(null);
-
+  const navigate = useNavigate();
   const selectedLocation = useLocationStore((state) => state.selectedLocation);
   const isGettingCurrentLocation = useLocationStore(
     (state) => state.isGettingCurrentLocation
@@ -44,12 +39,13 @@ export default function BreweryList() {
 
   const handleBreweryClick = (brewery: BreweryWithDistance) => {
     if (brewery.latitude && brewery.longitude) {
-      setSelectedBrewery({
-        coordinates: {
-          latitude: brewery.latitude,
-          longitude: brewery.longitude,
+      navigate(`/restaurants/${encodeURIComponent(brewery.name)}`, {
+        state: {
+          coordinates: {
+            latitude: brewery.latitude,
+            longitude: brewery.longitude,
+          },
         },
-        name: brewery.name,
       });
     }
   };
@@ -126,14 +122,6 @@ export default function BreweryList() {
 
       {breweries && breweries.length === 0 && (
         <p className="status-message">No breweries found for this location.</p>
-      )}
-
-      {selectedBrewery && (
-        <RestaurantList
-          breweryCoordinates={selectedBrewery.coordinates}
-          breweryName={selectedBrewery.name}
-          onClose={() => setSelectedBrewery(null)}
-        />
       )}
     </div>
   );
