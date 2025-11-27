@@ -109,27 +109,6 @@
   font-weight: 500;
 }
 
-.brewery-item.clickable::after {
-  content: "Click for restaurants";
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.85rem;
-  color: #84c8e5;
-  opacity: 0;
-  transition: opacity 0.25s;
-  pointer-events: none;
-}
-
-.brewery-item.clickable {
-  position: relative;
-}
-
-.brewery-item.clickable:hover::after {
-  opacity: 1;
-}
-
 .brewery-rank {
   font-size: 1.5rem;
   font-weight: bold;
