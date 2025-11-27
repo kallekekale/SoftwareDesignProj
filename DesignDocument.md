@@ -137,7 +137,96 @@ This section answers: Which data sources will be used and how?
 - **OpenBreweryDbController:** REST endpoints for brewery operations
 - **YelpService:** Restaurant data fetching and processing
 
-### 4.3 Data Flow (will change)
+### 4.3 Component Diagram
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                        FRONTEND (React + TypeScript)               │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    UI Components                            │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • App (Main Router)                                        │   │
+│  │  • BreweryList (Primary Display Component)                  │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              △                                     │
+│                              │ uses                                │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    Custom Hooks                             │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • useBreweries (fetches & caches brewery data)             │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              △                                     │
+│                              │ uses                                │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │              Services & State Management                    │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • breweryService (API calls to backend)                    │   │
+│  │  • queryClient (React Query caching)                        │   │
+│  │  • locationStore (Zustand state - location selection)       │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                                △                                   │
+│                                │ HTTP calls                        │
+└────────────────────────────────┼──────────────────────────────────┘
+                                 │
+                                 │ REST API
+                                 ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                   BACKEND (Spring Boot + Java)                     │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    REST Controllers                         │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • OpenBreweryDbController                                  │   │
+│  │    - GET/POST /api/breweries/distance                       │   │
+│  │  • YelpPlacesController                                     │   │
+│  │    - GET/POST /api/restaurants/nearby                       │   │
+│  │    - GET /api/restaurants/{id} (details)                    │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              △                                     │
+│                              │ delegates                           │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    Business Logic Services                  │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • OpenBreweryDbService (brewery retrieval & filtering)     │   │
+│  │  • YelpPlacesService (restaurant search & details)          │   │
+│  │  • DistanceService (proximity calculations)                 │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              △                                     │
+│                              │ uses                                │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │              Infrastructure Services                        │   │
+│  ├─────────────────────────────────────────────────────────────┤   │
+│  │  • HttpRequesterService (generic HTTP client)               │   │
+│  │  • GlobalExceptionHandler (cross-cutting error handling)    │   │
+│  │  • HttpRequesterConfig (configuration & retry logic)        │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              △                                     │
+│                              │ HTTP calls                          │
+└────────────────────────────────┼──────────────────────────────────┘
+                                 │
+                    ┌────────────┼────────────┐
+                    │            │            │
+                    ▼            ▼            ▼
+         ┌──────────────────┐ ┌──────────────┐
+         │ Open Brewery DB  │ │  Yelp API    │
+         │     (Public)     │ │  (External)  │
+         └──────────────────┘ └──────────────┘
+```
+
+**Component Responsibilities:**
+
+- **UI Layer (Frontend):** Renders brewery and restaurant information to users
+- **Hooks & State:** Manage data fetching, caching, and location selection
+- **Services (Frontend):** Handle API communication and state management
+- **Controllers (Backend):** Expose REST endpoints and handle HTTP requests
+- **Business Services (Backend):** Implement core business logic and data processing
+- **Infrastructure (Backend):** Provide reusable utilities for HTTP communication and error handling
+- **External APIs:** Third-party data sources for breweries and restaurants
+
+### 4.4 Data Flow (will change)
 
 1. Frontend calls backend for city-based brewery search
 2. Backend fetches brewery data from Open Brewery DB
@@ -223,17 +312,21 @@ Who did what, responsibilities and roles.
 
 #### Juho
 
-- Created structure for backend implementing global error handling, generic http requester, initial brewery CRUD DTOs
-- Rewieved the PRs of other members 
+- Created structure for backend implementing global error handling, generic http requester, initial brewery CRUD DTOs.
+- Rewieved the PRs of other members .
 
 #### Nandan
 
-- Implemented and merged small frontend reconsturction
+- Implemented and merged small frontend reconsturction.
 - Documented self-assesment, changes to original plan and extra work.
 
 #### Kalle
 
 - Worked on implementing "Feature: Detailed Restaurant Information" from the extra work section but was unable to finish it in a timely manner and unfortunately the functionality is still very much a work in progress. Will aim to finish this in the near future.
+
+#### Aleksanteri
+
+- Implemented Yelp controller.
 
 ### 6.2 Self-Assessment
 
