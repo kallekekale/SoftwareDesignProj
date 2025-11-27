@@ -218,37 +218,235 @@ This section answers: Which data sources will be used and how?
 
 **Component Responsibilities:**
 
-**Frontend:**
+This section describes the purpose and internal structure of each component in the system.
 
-- **UI Layer:**
-  - **App (Router):** Application shell with React Router for navigation between views
-  - **BreweryList:** Primary display component for rendering brewery information and location selection
-- **Custom Hooks:**
-  - **useBreweries:** Encapsulates brewery data fetching logic and manages query state using React Query
-- **Services:**
-  - **breweryService:** Singleton service handling all API communication with the backend brewery endpoints
-  - **queryClient:** React Query configuration for data caching and synchronization
-- **State Management:**
-  - **locationStore:** Zustand store managing global location selection state
+#### Frontend Components
 
-**Backend:**
+**1. App (Router)**
 
-- **REST Controllers:**
-  - **OpenBreweryDbController:** Exposes brewery-related REST endpoints (GET /api/breweries/{id}, POST /api/breweries/distance)
-  - **YelpPlacesController:** Exposes restaurant-related REST endpoints (GET/POST /api/restaurants/nearby, GET /api/restaurants/{id})
-- **Business Logic Services:**
-  - **OpenBreweryDbService:** Handles brewery data retrieval, filtering, and distance-based sorting
-  - **YelpPlacesService:** Manages restaurant search and detailed business information retrieval
-  - **DistanceService:** Performs proximity calculations between coordinates
-- **Infrastructure Services:**
-  - **HttpRequesterService:** Generic HTTP client for external API communication with retry logic
-  - **GlobalExceptionHandler:** Cross-cutting error handling for consistent error responses across all endpoints
-  - **HttpRequesterConfig:** Configuration for HTTP client including timeouts and retry strategies
+- **Purpose:** Serves as the application shell and manages client-side routing
+- **Responsibilities:**
+  - Wraps the application with React Router for navigation
+  - Defines route structure and maps URLs to components
+- **Internal Structure:**
+  - Uses `Routes` and `Route` components from react-router-dom
+  - Single route "/" maps to BreweryList component
+  - Can be extended with additional routes for restaurant details or other views
 
-**External APIs:**
+**2. BreweryList**
 
-- **Open Brewery DB:** Third-party public API providing brewery data
-- **Yelp API:** Third-party external API providing restaurant and business information
+- **Purpose:** Primary UI component for displaying brewery information and handling user interactions
+- **Responsibilities:**
+  - Renders the brewery search interface with location selection
+  - Displays list of breweries with distance information
+  - Handles user interactions (location selection, current location request)
+  - Shows loading and error states
+- **Internal Structure:**
+  - Uses `useBreweries` hook for data fetching
+  - Uses `locationStore` for managing selected location state
+  - Manages local UI state (loading indicators, error messages)
+  - Renders brewery cards with name, type, address, and distance
+
+**3. useBreweries (Custom Hook)**
+
+- **Purpose:** Encapsulates brewery data fetching logic and provides reactive state management
+- **Responsibilities:**
+  - Manages brewery data fetching lifecycle
+  - Provides loading, error, and data states to components
+  - Handles query caching and invalidation
+- **Internal Structure:**
+  - Parameters: `coordinates` (Coordinates | null), `perPage` (number, default: 10)
+  - Uses TanStack Query's `useQuery` hook
+  - Query key: `["breweries", coordinates, perPage]`
+  - Query function: calls `breweryService.getBreweriesByDistance()`
+  - Enabled condition: only fetches when coordinates are not null
+  - Returns: `{ data, isLoading, error }` from TanStack Query
+
+**4. breweryService (Singleton Service)**
+
+- **Purpose:** Handles all API communication with backend brewery endpoints
+- **Responsibilities:**
+  - Makes HTTP requests to brewery API endpoints
+  - Serializes request data and deserializes responses
+  - Handles HTTP errors and throws appropriate exceptions
+- **Internal Structure:**
+  - Class: `BreweryService` with singleton export pattern
+  - Private field: `baseUrl = "/api/breweries"`
+  - Method: `getBreweriesByDistance(coordinates, perPage)`
+    - Constructs POST request to `/api/breweries/distance?per_page={perPage}`
+    - Sets Content-Type header to application/json
+    - Sends coordinates as JSON body
+    - Returns Promise<BreweryWithDistance[]>
+    - Throws error if response status is not ok
+
+**5. locationStore (Zustand State)**
+
+- **Purpose:** Manages global location selection state across components
+- **Responsibilities:**
+  - Stores currently selected coordinates
+  - Provides methods to update selected location
+  - Enables state sharing between components without prop drilling
+- **Internal Structure:**
+  - Uses Zustand for lightweight state management
+  - State: `selectedLocation` (Coordinates | null)
+  - Actions: `setLocation(coordinates)`, `clearLocation()`
+  - Subscribers automatically re-render when state changes
+
+**6. queryClient**
+
+- **Purpose:** Configures React Query for data fetching, caching, and synchronization
+- **Responsibilities:**
+  - Sets global defaults for query behavior
+  - Manages cache invalidation and refetching strategies
+  - Provides optimistic updates and background refetching
+- **Internal Structure:**
+  - Created with `new QueryClient()`
+  - Default options: `staleTime: 5 minutes`, `refetchOnWindowFocus: false`
+  - Wrapped in `QueryClientProvider` in main.tsx
+
+#### Backend Components
+
+**1. OpenBreweryDbController**
+
+- **Purpose:** Exposes REST endpoints for brewery-related operations
+- **Responsibilities:**
+  - Receives and validates HTTP requests
+  - Delegates business logic to OpenBreweryDbService
+  - Returns properly formatted HTTP responses
+- **Internal Structure:**
+  - Annotation: `@RestController`, `@RequestMapping("/api/breweries")`
+  - Dependencies: `OpenBreweryDbService` (autowired)
+  - Endpoints:
+    - `GET /{id}`: Returns single brewery by ID
+    - `POST /distance?per_page={number}`: Returns breweries sorted by distance
+      - Request body: `CoordinateDto` (latitude, longitude)
+      - Response: `List<OpenBreweryDbDistanceResponseDto>`
+
+**2. YelpPlacesController**
+
+- **Purpose:** Exposes REST endpoints for restaurant search and details
+- **Responsibilities:**
+  - Handles restaurant search requests near given coordinates
+  - Retrieves detailed information for specific restaurants
+  - Validates request parameters and coordinates
+- **Internal Structure:**
+  - Annotation: `@RestController`, `@RequestMapping("/api/restaurants")`
+  - Dependencies: `YelpPlacesService` (autowired)
+  - Endpoints:
+    - `POST /nearby?limit={number}`: Search restaurants near coordinates
+    - `GET /{id}`: Get detailed restaurant information
+
+**3. OpenBreweryDbService**
+
+- **Purpose:** Handles brewery data retrieval from Open Brewery DB API and distance calculations
+- **Responsibilities:**
+  - Fetches brewery data from external API
+  - Calculates distances between breweries and reference points
+  - Filters and sorts breweries by proximity
+  - Handles errors and throws domain-specific exceptions
+- **Internal Structure:**
+  - Annotation: `@Service`
+  - Constants: `BASE_URL = "https://api.openbrewerydb.org/v1/breweries"`
+  - Dependencies: `HttpRequester`, `DistanceService` (constructor injected)
+  - Methods:
+    - `getBreweryById(String id)`: Fetches single brewery, throws `BreweryNotFoundException`
+    - `getBreweriesByDistance(CoordinateDto, Integer perPage)`:
+      - Constructs query URL with coordinates and pagination
+      - Fetches breweries using HttpRequester
+      - Maps each brewery to include calculated distance using DistanceService
+      - Returns `List<OpenBreweryDbDistanceResponseDto>`
+      - Throws `BreweryNotFoundWithDistException` on errors
+
+**4. YelpPlacesService**
+
+- **Purpose:** Manages restaurant data retrieval from Yelp API
+- **Responsibilities:**
+  - Searches for restaurants near given coordinates
+  - Retrieves detailed business information including hours, price, website
+  - Handles Yelp API authentication and rate limiting
+- **Internal Structure:**
+  - Annotation: `@Service`
+  - Dependencies: `HttpRequester` (constructor injected)
+  - Methods:
+    - `searchNearby(CoordinateDto, Integer limit)`: Returns nearby restaurants
+    - `getBusinessDetails(String id)`: Returns detailed restaurant information
+
+**5. DistanceService**
+
+- **Purpose:** Calculates geographic distances between coordinate pairs
+- **Responsibilities:**
+  - Implements Haversine formula for great-circle distance
+  - Validates coordinate ranges
+  - Returns distances in kilometers
+- **Internal Structure:**
+  - Annotation: `@Service`
+  - Constants: `EARTH_RADIUS = 6371.0` (kilometers)
+  - Methods:
+    - `calculateDistance(CoordinateDto coord1, CoordinateDto coord2)`:
+      - Validates coordinates (lat: -90 to 90, lon: -180 to 180)
+      - Converts degrees to radians
+      - Applies Haversine formula: `d = R * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon1 - lon2))`
+      - Returns distance in kilometers
+      - Throws `IllegalArgumentException` for invalid coordinates
+
+**6. HttpRequesterService**
+
+- **Purpose:** Provides generic HTTP client functionality for external API calls
+- **Responsibilities:**
+  - Makes HTTP GET/POST requests with proper headers
+  - Handles connection timeouts and retries
+  - Deserializes JSON responses to specified types
+  - Logs requests and responses for debugging
+- **Internal Structure:**
+  - Annotation: `@Service`
+  - Dependencies: `WebClient` (configured by HttpRequesterConfig)
+  - Methods:
+    - `get(String url, Class<T> responseType)`: Performs GET request
+    - `post(String url, Object body, Class<T> responseType)`: Performs POST request
+  - Features: Retry logic, timeout handling, error mapping
+
+**7. GlobalExceptionHandler**
+
+- **Purpose:** Provides centralized error handling across all REST endpoints
+- **Responsibilities:**
+  - Catches and handles domain-specific exceptions
+  - Formats error responses consistently
+  - Logs errors with appropriate severity levels
+  - Maps exceptions to HTTP status codes
+- **Internal Structure:**
+  - Annotation: `@RestControllerAdvice`
+  - Exception handlers:
+    - `@ExceptionHandler(BreweryNotFoundException.class)`: Returns 404
+    - `@ExceptionHandler(BreweryNotFoundWithDistException.class)`: Returns 404
+    - `@ExceptionHandler(Exception.class)`: Returns 500 for unexpected errors
+  - Response format: `{ "status": number, "message": string, "details": string }`
+
+**8. HttpRequesterConfig**
+
+- **Purpose:** Configures HTTP client with timeouts, retry strategies, and connection pooling
+- **Responsibilities:**
+  - Creates and configures WebClient bean
+  - Sets connection and read timeouts
+  - Configures retry logic for transient failures
+  - Sets up connection pool parameters
+- **Internal Structure:**
+  - Annotation: `@Configuration`
+  - Bean method: `webClient()` returns configured `WebClient`
+  - Configuration: Connection timeout, read timeout, retry attempts, backoff strategy
+
+#### External APIs
+
+**1. Open Brewery DB**
+
+- **Purpose:** Third-party public API providing brewery data
+- **Usage:** Queried by OpenBreweryDbService for brewery information
+- **Authentication:** None required (public API)
+
+**2. Yelp API (Fusion)**
+
+- **Purpose:** Third-party external API providing restaurant and business information
+- **Usage:** Queried by YelpPlacesService for restaurant search and details
+- **Authentication:** Bearer token required (API key)
 
 ### 4.4 Data Flow (will change)
 
