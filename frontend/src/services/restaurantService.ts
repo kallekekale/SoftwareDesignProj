@@ -23,7 +23,7 @@ export const restaurantService = {
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch restaurants");
+      throw new Error(`Failed to fetch restaurants: ${response.statusText}`);
     }
 
     return response.json();
