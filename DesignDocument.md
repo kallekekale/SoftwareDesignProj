@@ -518,9 +518,111 @@ Response: Details for a specific Yelp business
 
 > **Note:** Some content in Sections 4–5 originated from AI-assisted drafting; see Section 6.5.
 
-## 6. Process & Evaluation
+## 6. Design Decisions
 
-### 6.1 Division of Work
+This section documents the key design decisions made throughout the project, including technology choices, architectural patterns, and responsibility division.
+
+### 6.1 Technology Stack Selection
+
+#### Frontend Technologies
+
+**React 19 with TypeScript**
+- Frontend framework with type safety for component-based UI development and compile-time error checking
+
+**Vite 7.1.7**
+- Build tool providing fast development server, hot module replacement, and built-in proxy configuration for CORS handling
+
+**TanStack Query 5.90.5 (React Query)**
+- Data fetching and caching library for managing server state with automatic refetching and loading/error states
+
+**React Router DOM 7.9.6**
+- Client-side routing library for declarative navigation and route management
+
+**Zustand 5.0.8**
+- Lightweight state management library for global client state (location selection)
+
+**Prettier 3.6.2**
+- Code formatter ensuring consistent style across the codebase
+
+**ESLint**
+- Static code analysis tool for catching errors and enforcing best practices
+
+#### Backend Technologies
+
+**Spring Boot with Java 21**
+- Backend framework for building REST APIs with dependency injection and external service integration
+
+**Maven**
+- Dependency management and build automation tool for the Java project
+
+**Spring Web**
+- Core module for building RESTful endpoints with HTTP handling utilities
+
+**Spring WebClient**
+- Reactive HTTP client for external API calls with timeout and retry support
+
+### 6.2 Design Patterns
+
+**Singleton Pattern**
+- Frontend services (breweryService) implemented as singleton classes for consistent instances and encapsulated configuration
+
+**Custom Hooks Pattern**
+- Data fetching logic encapsulated in custom hooks (useBreweries) to separate concerns from UI rendering
+
+**Dependency Injection**
+- Backend services use constructor-based dependency injection for explicit dependencies and testability
+
+**Generic HTTP Client**
+- Centralized HttpRequesterService handles all external API calls with consistent timeout, retry, and error handling logic
+
+### 6.3 External APIs
+
+**Open Brewery DB**
+- Public API providing brewery data including names, types, addresses, and coordinates
+- No authentication required
+- Used for brewery search and listing functionality
+
+**Yelp Fusion API**
+- External API providing restaurant and business information
+- Requires Bearer token authentication
+- Used for nearby restaurant search and detailed business information (website, price, hours)
+
+### 6.4 Responsibility Division
+
+**Frontend Architecture**
+- **UI Layer (Components):** BreweryList handles rendering and user interactions
+- **Data Layer (Hooks):** useBreweries manages data fetching lifecycle and caching
+- **Service Layer (Services):** breweryService handles HTTP communication
+- **State Management:** TanStack Query for server state, Zustand for client state
+
+**Backend Architecture**
+- **Controllers:** Handle HTTP concerns (request/response formatting, validation)
+- **Services:** Implement business logic (distance calculations, data transformation)
+- **Infrastructure:** Generic utilities (HttpRequester, error handling)
+
+### 6.5 Other Design Decisions
+
+**CORS Handling**
+- Vite proxy configuration used instead of backend CORS headers to avoid preflight requests during development
+
+**Error Handling**
+- GlobalExceptionHandler provides centralized error handling using Spring's @RestControllerAdvice for consistent error responses
+
+**Distance Calculation**
+- Haversine formula implemented in DistanceService for calculating great-circle distances between coordinates
+
+**API Design**
+- POST method used for coordinate-based searches to send complex query parameters in request body rather than URL
+
+### 6.6 Justification and Quality Requirements
+
+Our design decisions were primarily guided by maintainability, ease of development, and code quality. We chose TypeScript and Spring Boot to catch errors early and make the codebase easier to understand and modify for all team members. The use of established patterns like dependency injection, custom hooks, and singleton services helps organize code in a way that's familiar to developers and makes testing simpler. External libraries like TanStack Query and React Router were selected because they solve common problems well and reduce the amount of custom code we need to write and maintain.
+
+Performance and practical development needs also influenced our choices. Vite provides fast build times and quick feedback during development, which speeds up the development process. The Vite proxy configuration simplifies local development by avoiding CORS issues without complicated backend setup. For distance calculations, we implemented the Haversine formula because it provides sufficient accuracy for our needs while being straightforward to implement. Overall, our decisions balance getting features working quickly while keeping the code organized and maintainable for future development.
+
+## 7. Process & Evaluation
+
+### 7.1 Division of Work
 
 Who did what, responsibilities and roles.
 
@@ -550,7 +652,7 @@ Who did what, responsibilities and roles.
 
 - Implemented Yelp controller.
 
-### 6.2 Self-Assessment
+### 7.2 Self-Assessment
 
 Overall the project is progressing well. We met the primary goals for the midterm: the core brewery lookup flow is implemented end-to-end, and the extra feature to surface detailed restaurant information has been successfully integrated. Documentation is in good shape and has been expanded to reflect design decisions and the new functionality, which has helped keep everyone aligned.
 
@@ -579,7 +681,7 @@ Key learnings
 
 Overall, the team is on track. The implementation of the additional feature and the improved documentation show solid progress, and the small communication issues are addressable with minor process adjustments.
 
-### 6.3 Changes to the Original Plan
+### 7.3 Changes to the Original Plan
 
 During development we made a deliberate shift from one of our original feature goals. The midterm plan included adding an interactive map view that would display breweries and nearby restaurants visually. After early investigation and prioritization discussions, the team decided to postpone the map and instead invest the same effort in enriching restaurant details (website link, price category and opening hours). The change was driven by a desire to deliver higher immediate user value within the same time budget.
 
@@ -594,7 +696,7 @@ Reasons for the change
 - Higher perceived user value: The team judged that surfacing concrete decision-making information (website, price, hours) would be immediately more useful for users choosing a restaurant than a map visualization at the midterm stage.
 - Lower risk to core flow: Adding restaurant details reused existing Yelp endpoints and fit naturally into our current backend/service structure, whereas a map would have required new cross-cutting UI and UX work and more integration testing.
 
-### 6.4 Extra Work
+### 7.4 Extra Work
 
 Beyond the original plan, we implemented enhanced restaurant information retrieval from the Yelp API. Rather than displaying only basic proximity data, we extended the restaurant list feature to fetch and present detailed information about each establishment when selected by the user.
 
@@ -640,7 +742,7 @@ Frontend
 
 We made the documention much more comprehensive than required in the submission guidelines.
 
-### 6.5 AI Usage
+### 7.5 AI Usage
 
 **Tools used**
 
