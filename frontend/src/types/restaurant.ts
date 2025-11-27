@@ -24,9 +24,9 @@ export interface YelpHours {
 export interface YelpRestaurant {
   id: string;
   name: string;
-  rating: number;
-  review_count: number;
-  distance: number;
+  rating: number | null;
+  review_count: number | null;
+  distance: number | null;
   location: YelpLocation;
   image_url: string;
   price?: string;

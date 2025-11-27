@@ -62,12 +62,16 @@ export default function RestaurantList({
                   <h3>{restaurant.name}</h3>
 
                   <div className="restaurant-info">
-                    <span className="rating">
-                      ⭐ {restaurant.rating.toFixed(1)}
-                    </span>
-                    <span className="review-count">
-                      ({restaurant.review_count} reviews)
-                    </span>
+                    {restaurant.rating !== null && (
+                      <span className="rating">
+                        ⭐ {restaurant.rating.toFixed(1)}
+                      </span>
+                    )}
+                    {restaurant.review_count !== null && (
+                      <span className="review-count">
+                        ({restaurant.review_count} reviews)
+                      </span>
+                    )}
                     {restaurant.price && (
                       <span className="price-category">{restaurant.price}</span>
                     )}
@@ -79,10 +83,12 @@ export default function RestaurantList({
                       `, ${restaurant.location.city}`}
                   </p>
 
-                  <p className="restaurant-distance">
-                    <strong>Distance:</strong>{" "}
-                    {(restaurant.distance / 1000).toFixed(2)} km
-                  </p>
+                  {restaurant.distance !== null && (
+                    <p className="restaurant-distance">
+                      <strong>Distance:</strong>{" "}
+                      {(restaurant.distance / 1000).toFixed(2)} km
+                    </p>
+                  )}
 
                   {restaurant.business_hours &&
                     restaurant.business_hours.length > 0 && (
