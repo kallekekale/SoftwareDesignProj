@@ -3,6 +3,7 @@ package fi.tuni.softwaredesign.yelp;
 import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceResponseDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
+import fi.tuni.softwaredesign.shared.domain.dto.response.YelpSearchResponse;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
 import java.util.List;
