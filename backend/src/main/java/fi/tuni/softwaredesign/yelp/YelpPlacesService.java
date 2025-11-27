@@ -1,6 +1,5 @@
 package fi.tuni.softwaredesign.yelp;
 
-import fi.tuni.softwaredesign.distance.DistanceService;
 import fi.tuni.softwaredesign.shared.domain.dto.request.CoordinateDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceResponseDto;
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto;
@@ -21,7 +20,6 @@ public class YelpPlacesService {
 
   private static final String BASE_URL = "https://api.yelp.com/v3/businesses";
   private final HttpRequester httpRequester;
-  private final DistanceService distanceService;
 
   @Value("${yelp.api.key}")
   private String yelpApiKey;
