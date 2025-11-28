@@ -7,12 +7,12 @@ import fi.tuni.softwaredesign.shared.domain.dto.response.OpenBreweryDbResponseDt
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundException;
 import fi.tuni.softwaredesign.shared.http.exceptions.BreweryNotFoundWithDistException;
-import org.springframework.cache.annotation.Cacheable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /** Service for interacting with the Open Brewery DB API. */

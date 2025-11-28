@@ -6,13 +6,13 @@ import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpSearchResponse;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
-import org.springframework.cache.annotation.Cacheable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /** Service for interacting with the Yelp Fusion API. */
