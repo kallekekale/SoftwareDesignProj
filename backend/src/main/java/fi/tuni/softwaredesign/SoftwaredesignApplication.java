@@ -2,6 +2,7 @@ package fi.tuni.softwaredesign;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * Main Spring Boot application class for the Software Design course backend.
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0
  */
 @SpringBootApplication
+@EnableCaching
 public class SoftwaredesignApplication {
 
   /**

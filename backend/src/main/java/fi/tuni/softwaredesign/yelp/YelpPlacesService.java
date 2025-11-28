@@ -6,6 +6,7 @@ import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessResponseDto
 import fi.tuni.softwaredesign.shared.domain.dto.response.YelpSearchResponse;
 import fi.tuni.softwaredesign.shared.http.HttpRequester;
 import fi.tuni.softwaredesign.shared.http.exceptions.BusinessNotFoundException;
+import org.springframework.cache.annotation.Cacheable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
