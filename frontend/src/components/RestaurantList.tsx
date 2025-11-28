@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { useRestaurants } from "../hooks/useRestaurants";
+import { useNearbyData } from "../hooks/useNearbyData";
 import type { Coordinates } from "../types/brewery";
 import type { YelpRestaurant } from "../types/restaurant";
 import { formatTime } from "../lib/utils";
@@ -10,6 +10,7 @@ export default function RestaurantList() {
   const navigate = useNavigate();
   const { breweryName } = useParams<{ breweryName: string }>();
   const location = useLocation();
+
   const breweryCoordinates = location.state?.coordinates as
     | Coordinates
     | undefined;
@@ -18,11 +19,9 @@ export default function RestaurantList() {
     data: restaurants,
     isLoading,
     error,
-  } = useRestaurants(breweryCoordinates || null, 10);
+  } = useNearbyData("restaurants", breweryCoordinates || null, 10);
 
-  const handleGoBack = () => {
-    navigate("/");
-  };
+  const handleGoBack = () => navigate("/");
 
   if (!breweryCoordinates) {
     return (
@@ -67,6 +66,7 @@ export default function RestaurantList() {
                     className="restaurant-image"
                   />
                 )}
+
                 <div className="restaurant-details">
                   <h3>{restaurant.name}</h3>
 
@@ -76,11 +76,13 @@ export default function RestaurantList() {
                         ⭐ {restaurant.rating.toFixed(1)}
                       </span>
                     )}
+
                     {restaurant.review_count !== null && (
                       <span className="review-count">
                         ({restaurant.review_count} reviews)
                       </span>
                     )}
+
                     {restaurant.price && (
                       <span className="price-category">{restaurant.price}</span>
                     )}
@@ -118,10 +120,15 @@ export default function RestaurantList() {
                             )
                           )}
                         </div>
+
                         {restaurant.business_hours[0].is_open_now !==
                           undefined && (
                           <p
-                            className={`open-status ${restaurant.business_hours[0].is_open_now ? "open" : "closed"}`}
+                            className={`open-status ${
+                              restaurant.business_hours[0].is_open_now
+                                ? "open"
+                                : "closed"
+                            }`}
                           >
                             {restaurant.business_hours[0].is_open_now
                               ? "🟢 Open Now"

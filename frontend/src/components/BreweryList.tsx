@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useBreweries } from "../hooks/useBreweries";
+import { useNearbyData } from "../hooks/useNearbyData";
 import { useLocationStore } from "../stores/locationStore";
 import type { BreweryWithDistance, Coordinates } from "../types/brewery";
 
@@ -21,6 +21,7 @@ const MOCKED_LOCATIONS: { name: string; coordinates: Coordinates }[] = [
 
 export default function BreweryList() {
   const navigate = useNavigate();
+
   const selectedLocation = useLocationStore((state) => state.selectedLocation);
   const isGettingCurrentLocation = useLocationStore(
     (state) => state.isGettingCurrentLocation
@@ -31,7 +32,11 @@ export default function BreweryList() {
     (state) => state.getCurrentLocation
   );
 
-  const { data: breweries, isLoading, error } = useBreweries(selectedLocation);
+  const {
+    data: breweries,
+    isLoading,
+    error,
+  } = useNearbyData("breweries", selectedLocation, 10);
 
   const handleLocationClick = (coordinates: Coordinates) => {
     setLocation(coordinates);
@@ -65,6 +70,7 @@ export default function BreweryList() {
             {location.name}
           </button>
         ))}
+
         <button
           onClick={getCurrentLocation}
           className="location-button current-location-button"
@@ -93,6 +99,7 @@ export default function BreweryList() {
           <p className="click-hint">
             Click on a brewery to see nearby restaurants
           </p>
+
           <ul className="brewery-list">
             {breweries.map((brewery: BreweryWithDistance, index: number) => (
               <li
@@ -101,15 +108,20 @@ export default function BreweryList() {
                 onClick={() => handleBreweryClick(brewery)}
               >
                 <div className="brewery-rank">{index + 1}</div>
+
                 <div className="brewery-details">
                   <h3>{brewery.name}</h3>
+
                   <p className="brewery-type">{brewery.brewery_type}</p>
+
                   <p className="brewery-location">
                     {brewery.city}, {brewery.state_province || brewery.country}
                   </p>
+
                   {brewery.street && (
                     <p className="brewery-address">{brewery.street}</p>
                   )}
+
                   <p className="brewery-distance">
                     <strong>Distance:</strong> {brewery.distance.toFixed(2)} km
                   </p>
