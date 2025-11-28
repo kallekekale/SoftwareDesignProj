@@ -54,6 +54,7 @@ public class OpenBreweryDbService {
    * @return list of OpenBreweryDbDistanceResponseDto containing brewery information with distances
    * @throws BreweryNotFoundWithDistException if breweries are not found with the given coordinates
    */
+  @Cacheable(value = "breweriesByLocation", key = "#coordinates.latitude + '-' + #coordinates.longitude + '-' + (#perPage != null ? #perPage : 10)")
   public List<OpenBreweryDbDistanceResponseDto> getBreweriesByDistance(
       CoordinateDto coordinates, Integer perPage) {
     try {

@@ -43,6 +43,7 @@ public class YelpPlacesService {
   }
 
   /** Get nearby restaurants sorted by distance. */
+  @Cacheable(value = "restaurantsByLocation", key = "#coordinates.latitude + '-' + #coordinates.longitude + '-' + (#limit != null ? #limit : 10)")
   public List<YelpBusinessDistanceResponseDto> getNearbyRestaurants(
       CoordinateDto coordinates, Integer limit) {
     try {
