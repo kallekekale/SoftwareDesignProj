@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class BreweryRestaurantController {
 
-    private final BreweryRestaurantService service;
+  private final BreweryRestaurantService service;
 
-    public BreweryRestaurantController(BreweryRestaurantService service) {
-        this.service = service;
-    }
+  public BreweryRestaurantController(BreweryRestaurantService service) {
+    this.service = service;
+  }
 
-    @PostMapping("/breweries")
-    public List<OpenBreweryDbDistanceResponseDto> getBreweries(@RequestBody CoordinateDto coordinates,
-                                                              @RequestParam(required = false) Integer limit) {
-        return service.getBreweries(coordinates, limit);
-    }
+  @PostMapping("/breweries")
+  public List<OpenBreweryDbDistanceResponseDto> getBreweries(
+      @RequestBody CoordinateDto coordinates, @RequestParam(required = false) Integer limit) {
+    return service.getBreweries(coordinates, limit);
+  }
 
-    @PostMapping("/restaurants")
-    public List<YelpBusinessDistanceResponseDto> getRestaurants(@RequestBody CoordinateDto coordinates,
-                                                               @RequestParam(required = false) Integer limit) {
-        return service.getRestaurants(coordinates, limit);
-    }
+  @PostMapping("/restaurants")
+  public List<YelpBusinessDistanceResponseDto> getRestaurants(
+      @RequestBody CoordinateDto coordinates, @RequestParam(required = false) Integer limit) {
+    return service.getRestaurants(coordinates, limit);
+  }
 }
