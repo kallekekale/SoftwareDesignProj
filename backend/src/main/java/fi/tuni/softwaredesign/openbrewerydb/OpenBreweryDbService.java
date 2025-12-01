@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /** Service for interacting with the Open Brewery DB API. */
@@ -55,10 +54,6 @@ public class OpenBreweryDbService {
    * @return list of OpenBreweryDbDistanceResponseDto containing brewery information with distances
    * @throws BreweryNotFoundWithDistException if breweries are not found with the given coordinates
    */
-  @Cacheable(
-      value = "breweriesByLocation",
-      key =
-          "#coordinates.latitude + '-' + #coordinates.longitude + '-' + (#perPage != null ? #perPage : 10)")
   public List<OpenBreweryDbDistanceResponseDto> getBreweriesByDistance(
       CoordinateDto coordinates, Integer perPage) {
     try {
@@ -74,6 +69,11 @@ public class OpenBreweryDbService {
       OpenBreweryDbResponseDto[] breweries =
           httpRequester.get(url, OpenBreweryDbResponseDto[].class);
 
+      if (breweries == null || breweries.length == 0) {
+        logger.warn("No breweries found for coordinates: {}", coordinates);
+        return List.of();
+      }
+
       return Arrays.stream(breweries)
           .map(
               brewery -> {
@@ -84,7 +84,7 @@ public class OpenBreweryDbService {
               })
           .collect(Collectors.toList());
     } catch (Exception e) {
-      logger.error("Error fetching breweries by distance: {}", coordinates);
+      logger.error("Error fetching breweries by distance: {}", coordinates, e);
       throw new BreweryNotFoundWithDistException(coordinates);
     }
   }

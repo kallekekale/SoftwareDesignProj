@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /** Service for interacting with the Yelp Fusion API. */
@@ -44,10 +43,6 @@ public class YelpPlacesService {
   }
 
   /** Get nearby restaurants sorted by distance. */
-  @Cacheable(
-      value = "restaurantsByLocation",
-      key =
-          "#coordinates.latitude + '-' + #coordinates.longitude + '-' + (#limit != null ? #limit : 10)")
   public List<YelpBusinessDistanceResponseDto> getNearbyRestaurants(
       CoordinateDto coordinates, Integer limit) {
     try {
@@ -62,8 +57,9 @@ public class YelpPlacesService {
       Map<String, String> headers = Map.of("Authorization", "Bearer " + yelpApiKey);
       YelpSearchResponse response = httpRequester.get(url, YelpSearchResponse.class, headers);
 
-      if (response == null || response.businesses() == null) {
-        throw new BusinessNotFoundException(coordinates);
+      if (response == null || response.businesses() == null || response.businesses().isEmpty()) {
+        logger.warn("No restaurants found for coordinates: {}", coordinates);
+        return List.of();
       }
 
       return response.businesses().stream()
