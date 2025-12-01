@@ -27,7 +27,6 @@ public class RedisCacheConfig {
 
   @Bean
   public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-    // Create a custom ObjectMapper that allows unwrapped types
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
 
