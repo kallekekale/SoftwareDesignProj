@@ -5,5 +5,4 @@ import fi.tuni.softwaredesign.shared.domain.dto.response.YelpBusinessDistanceRes
 import java.util.List;
 
 public record BreweryWithRestaurantsDto(
-    OpenBreweryDbDistanceResponseDto brewery,
-    List<YelpBusinessDistanceResponseDto> restaurants) {}
+    OpenBreweryDbDistanceResponseDto brewery, List<YelpBusinessDistanceResponseDto> restaurants) {}

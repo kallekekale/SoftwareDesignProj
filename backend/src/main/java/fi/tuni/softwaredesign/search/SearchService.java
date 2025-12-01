@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-/**
- * Service for search operations. Combines brewery and restaurant data for convenient querying.
- */
+/** Service for search operations. Combines brewery and restaurant data for convenient querying. */
 @Service
 public class SearchService {
   private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
@@ -34,7 +32,9 @@ public class SearchService {
    * @param limit the number of results to return (optional)
    * @return list of breweries with distances
    */
-  @Cacheable(value = "breweries", key = "#coordinates.latitude + ',' + #coordinates.longitude + ',' + #limit")
+  @Cacheable(
+      value = "breweries",
+      key = "#coordinates.latitude + ',' + #coordinates.longitude + ',' + #limit")
   public List<OpenBreweryDbDistanceResponseDto> getBreweries(
       CoordinateDto coordinates, Integer limit) {
     logger.debug("Fetching breweries for coordinates: {}", coordinates);
@@ -48,7 +48,9 @@ public class SearchService {
    * @param limit the number of results to return (optional)
    * @return list of restaurants with distances
    */
-  @Cacheable(value = "restaurants", key = "#coordinates.latitude + ',' + #coordinates.longitude + ',' + #limit")
+  @Cacheable(
+      value = "restaurants",
+      key = "#coordinates.latitude + ',' + #coordinates.longitude + ',' + #limit")
   public List<YelpBusinessDistanceResponseDto> getRestaurants(
       CoordinateDto coordinates, Integer limit) {
     logger.debug("Fetching restaurants for coordinates: {}", coordinates);
@@ -75,8 +77,7 @@ public class SearchService {
         new OpenBreweryDbDistanceResponseDto(brewery, 0.0);
 
     // Get restaurants near the brewery
-    CoordinateDto breweryCoordinates =
-        new CoordinateDto(brewery.latitude(), brewery.longitude());
+    CoordinateDto breweryCoordinates = new CoordinateDto(brewery.latitude(), brewery.longitude());
     List<YelpBusinessDistanceResponseDto> restaurants =
         getRestaurants(breweryCoordinates, restaurantLimit);
 
