@@ -660,7 +660,8 @@ Who did what, responsibilities and roles.
 #### Juho
 
 - Created structure for backend implementing global error handling, generic http requester, initial brewery CRUD DTOs.
-- Rewieved the PRs of other members .
+- Rewieved the PRs of other members.
+- Worked on frontend state management with Zustand and refactoring.
 
 #### Nandan
 
