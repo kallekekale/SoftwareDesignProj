@@ -665,8 +665,10 @@ Who did what, responsibilities and roles.
 
 #### Nandan
 
-- Implemented and merged small frontend reconsturction.
-- Documented self-assesment, changes to original plan and extra work.
+- Implemented the base for the frontend frontend.
+- Documented self-assesment, changes to original plan, extra work,
+component responsibilities, internal structure, functions of components and
+design decisions.
 
 #### Kalle
 
