@@ -1,7 +1,7 @@
 # SoftwareDesignProj - Design Document
 
 **Team:** Aleksanteri Heinonen, Juho Kangas, Kalle Kekäle, Nandan von Veh, Wilhem Tcheng  
-**Version:** Midterm Submission
+**Version:** Final Submission
 
 ## 1. Overview
 
@@ -207,9 +207,9 @@ This section answers: Which data sources will be used and how?
 │                              │ HTTP calls                          │
 └────────────────────────────────┼──────────────────────────────────┘
                                  │
-                    ┌────────────┼────────────┐
-                    │            │            │
-                    ▼            ▼            ▼
+                    ┌────────────┼
+                    │            │            
+                    ▼            ▼            
          ┌──────────────────┐ ┌──────────────┐
          │ Open Brewery DB  │ │  Yelp API    │
          │     (Public)     │ │  (External)  │
@@ -448,7 +448,7 @@ This section describes the purpose and internal structure of each component in t
 - **Usage:** Queried by YelpPlacesService for restaurant search and details
 - **Authentication:** Bearer token required (API key)
 
-### 4.4 Data Flow (will change)
+### 4.4 Data Flow
 
 1. Frontend calls backend for city-based brewery search
 2. Backend fetches brewery data from Open Brewery DB
@@ -647,15 +647,15 @@ Performance and practical development needs also influenced our choices. Vite pr
 
 ### 7.1 Division of Work
 
-Who did what, responsibilities and roles.
+Who did what, responsibilities and roles for final submission.
 
 #### Wilhelm
 
 - Restructured design document.
-- Planned what needs to be done for the midterm submission.
-- Wrote about AI usage.
-- Made the main use case diagram.
-- Documented extra work.
+- Documented ai usage, self- and team-assement, design decisions.
+- Made the component diagram.
+- Documented extra work and Redis.
+- Reviewed design document for submission.
 
 #### Juho
 
@@ -772,6 +772,10 @@ Frontend
 
 We made the documention much more comprehensive than required in the submission guidelines.
 
+**Redis cache**
+
+The backend uses Redis to cache frequently requested search results to reduce external API calls and improve response times. Caching is enabled via `@EnableCaching` in `backend/src/main/java/fi/tuni/softwaredesign/shared/config/RedisCacheConfig.java`. The `RedisCacheConfig` creates a Lettuce `RedisConnectionFactory` using environment variables `SPRING_REDIS_HOST` and `SPRING_REDIS_PORT`, configures a `RedisCacheManager` with JSON serialization (`GenericJackson2JsonRedisSerializer`) and a default TTL of 10 minutes. The application sets `spring.cache.type=redis` in `backend/src/main/resources/application.properties`, and `docker-compose.yml` defines a `redis` service (image `redis:7.0`) and provides the env vars for the backend (`SPRING_REDIS_HOST=redis`, `SPRING_REDIS_PORT=6379`). Cacheable methods in `SearchService` use cache names `breweries`, `restaurants`, and `breweryWithRestaurants` to store results for typical search and detail queries.
+
 ### 7.5 AI Usage
 
 **Tools used**
@@ -783,14 +787,15 @@ We made the documention much more comprehensive than required in the submission 
 **Application Areas**
 
 - Translating text to English.
-- Design Document drafting (Sections 4-5).
+- Design Document drafting.
 - Inline comments.
 - Implementing APIs.
 - Frontend drafting.
 - Making diagrams look formatted.
+- Editing and refining the design document for clarity and structure.
 
 **Human Review**
 
 - All AI-generated content underwent thorough review to ensure accuracy, relevance, and alignment with project requirements.
 
-No sensitive data was shared with AI
+No sensitive data was shared with AI.
