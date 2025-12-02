@@ -53,7 +53,7 @@ public class SearchController {
    * @param restaurantLimit the number of restaurants to return (optional, default 10)
    * @return brewery with nearby restaurants (cached in Redis)
    */
-  @GetMapping("/brewery/{breweryId}/with-restaurants")
+  @GetMapping("/brewery/{breweryId}")
   public BreweryWithRestaurantsDto getBreweryWithRestaurants(
       @PathVariable String breweryId, @RequestParam(required = false) Integer restaurantLimit) {
     return searchService.getBreweryWithRestaurants(breweryId, restaurantLimit);
