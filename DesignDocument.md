@@ -527,62 +527,79 @@ This section documents the key design decisions made throughout the project, inc
 #### Frontend Technologies
 
 **React 19 with TypeScript**
+
 - Frontend framework with type safety for component-based UI development and compile-time error checking
 
 **Vite 7.1.7**
+
 - Build tool providing fast development server, hot module replacement, and built-in proxy configuration for CORS handling
 
 **TanStack Query 5.90.5 (React Query)**
+
 - Data fetching and caching library for managing server state with automatic refetching and loading/error states
 
 **React Router DOM 7.9.6**
+
 - Client-side routing library for declarative navigation and route management
 
 **Zustand 5.0.8**
+
 - Lightweight state management library for global client state (location selection)
 
 **Prettier 3.6.2**
+
 - Code formatter ensuring consistent style across the codebase
 
 **ESLint**
+
 - Static code analysis tool for catching errors and enforcing best practices
 
 #### Backend Technologies
 
 **Spring Boot with Java 21**
+
 - Backend framework for building REST APIs with dependency injection and external service integration
 
 **Maven**
+
 - Dependency management and build automation tool for the Java project
 
 **Spring Web**
+
 - Core module for building RESTful endpoints with HTTP handling utilities
 
 **Spring WebClient**
+
 - Reactive HTTP client for external API calls with timeout and retry support
 
 ### 6.2 Design Patterns
 
 **Singleton Pattern**
+
 - Frontend services (breweryService) implemented as singleton classes for consistent instances and encapsulated configuration
 
 **Custom Hooks Pattern**
+
 - Data fetching logic encapsulated in custom hooks (useBreweries) to separate concerns from UI rendering
 
 **Dependency Injection**
+
 - Backend services use constructor-based dependency injection for explicit dependencies and testability
 
 **Generic HTTP Client**
+
 - Centralized HttpRequesterService handles all external API calls with consistent timeout, retry, and error handling logic
 
 ### 6.3 External APIs
 
 **Open Brewery DB**
+
 - Public API providing brewery data including names, types, addresses, and coordinates
 - No authentication required
 - Used for brewery search and listing functionality
 
 **Yelp Fusion API**
+
 - External API providing restaurant and business information
 - Requires Bearer token authentication
 - Used for nearby restaurant search and detailed business information (website, price, hours)
@@ -590,12 +607,14 @@ This section documents the key design decisions made throughout the project, inc
 ### 6.4 Responsibility Division
 
 **Frontend Architecture**
+
 - **UI Layer (Components):** BreweryList handles rendering and user interactions
 - **Data Layer (Hooks):** useBreweries manages data fetching lifecycle and caching
 - **Service Layer (Services):** breweryService handles HTTP communication
 - **State Management:** TanStack Query for server state, Zustand for client state
 
 **Backend Architecture**
+
 - **Controllers:** Handle HTTP concerns (request/response formatting, validation)
 - **Services:** Implement business logic (distance calculations, data transformation)
 - **Infrastructure:** Generic utilities (HttpRequester, error handling)
@@ -603,15 +622,19 @@ This section documents the key design decisions made throughout the project, inc
 ### 6.5 Other Design Decisions
 
 **CORS Handling**
+
 - Vite proxy configuration used instead of backend CORS headers to avoid preflight requests during development
 
 **Error Handling**
+
 - GlobalExceptionHandler provides centralized error handling using Spring's @RestControllerAdvice for consistent error responses
 
 **Distance Calculation**
+
 - Haversine formula implemented in DistanceService for calculating great-circle distances between coordinates
 
 **API Design**
+
 - POST method used for coordinate-based searches to send complex query parameters in request body rather than URL
 
 ### 6.6 Justification and Quality Requirements
@@ -646,7 +669,10 @@ Who did what, responsibilities and roles.
 
 #### Kalle
 
-- Worked on implementing "Feature: Detailed Restaurant Information" from the extra work section but was unable to finish it in a timely manner and unfortunately the functionality is still very much a work in progress. Will aim to finish this in the near future.
+- Setup project structure
+- Setup GitHub repo with CI/CD pipeline
+- Configure vite dev server proxy to forward API requests to backend
+- Implemented detailed restaurant information
 
 #### Aleksanteri
 
