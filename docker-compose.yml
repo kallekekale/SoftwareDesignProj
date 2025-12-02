@@ -14,12 +14,23 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       LOGGING_LEVEL_FI_TUNI_SOFTWAREDESIGN: INFO
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
 
   nginx:
     restart: always
     image: nginx:latest
     ports:
-      - '8080:80'
+      - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
@@ -27,3 +38,6 @@ services:
         condition: service_started
       backend:
         condition: service_started
+
+volumes:
+  redis-data:

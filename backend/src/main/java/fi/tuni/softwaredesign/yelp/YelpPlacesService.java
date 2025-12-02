@@ -57,8 +57,9 @@ public class YelpPlacesService {
       Map<String, String> headers = Map.of("Authorization", "Bearer " + yelpApiKey);
       YelpSearchResponse response = httpRequester.get(url, YelpSearchResponse.class, headers);
 
-      if (response == null || response.businesses() == null) {
-        throw new BusinessNotFoundException(coordinates);
+      if (response == null || response.businesses() == null || response.businesses().isEmpty()) {
+        logger.warn("No restaurants found for coordinates: {}", coordinates);
+        return List.of();
       }
 
       return response.businesses().stream()

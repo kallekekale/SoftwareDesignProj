@@ -69,6 +69,11 @@ public class OpenBreweryDbService {
       OpenBreweryDbResponseDto[] breweries =
           httpRequester.get(url, OpenBreweryDbResponseDto[].class);
 
+      if (breweries == null || breweries.length == 0) {
+        logger.warn("No breweries found for coordinates: {}", coordinates);
+        return List.of();
+      }
+
       return Arrays.stream(breweries)
           .map(
               brewery -> {
@@ -79,7 +84,7 @@ public class OpenBreweryDbService {
               })
           .collect(Collectors.toList());
     } catch (Exception e) {
-      logger.error("Error fetching breweries by distance: {}", coordinates);
+      logger.error("Error fetching breweries by distance: {}", coordinates, e);
       throw new BreweryNotFoundWithDistException(coordinates);
     }
   }
