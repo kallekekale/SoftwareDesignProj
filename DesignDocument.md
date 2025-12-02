@@ -650,7 +650,8 @@ Who did what, responsibilities and roles.
 
 #### Aleksanteri
 
-- Implemented Yelp controller.
+- Created Yelp for business account & implemented Yelp controller.
+- Implemented Redis cache
 
 ### 7.2 Self-Assessment
 
