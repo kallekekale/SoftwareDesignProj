@@ -309,7 +309,7 @@ Who did what, responsibilities and roles.
 
 #### Nandan
 
-- Implemented the base for the frontend frontend.
+- Implemented the base for the frontend.
 - Documented self-assesment, changes to original plan, extra work,
   component responsibilities, internal structure, functions of components and
   design decisions.
