@@ -112,83 +112,162 @@ The goal of this application is to let a user pick a city and then browse brewer
 - **DistanceService:** Haversine distance calculation
 - **HttpRequesterService:** Generic HTTP client with retry logic
 
-### 4.4 Component Diagram
+### 4.4 Class Diagram
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│                        FRONTEND (React + TypeScript)               │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                    UI Components                            │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • App (Main Router)                                        │   │
-│  │  • BreweryList (Primary Display Component)                  │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              △                                     │
-│                              │ uses                                │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                    Custom Hooks                             │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • useNearbyData (fetches breweries & restaurants data)     │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              △                                     │
-│                              │ uses                                │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │              Services & State Management                    │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • searchService (API calls to backend)                     │   │
-│  │  • queryClient (React Query caching)                        │   │
-│  │  • locationStore (Zustand state - location selection)       │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                                △                                   │
-│                                │ HTTP calls                        │
-└────────────────────────────────┼──────────────────────────────────┘
-                                 │
-                                 │ REST API
-                                 ▼
-┌────────────────────────────────────────────────────────────────────┐
-│                   BACKEND (Spring Boot + Java)                     │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                    REST Controllers                         │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • SearchController                                         │   │
-│  │    - POST /api/search/breweries                             │   │
-│  │    - POST /api/search/restaurants                           │   │
-│  │    - GET /api/search/brewery/{id}                           │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              △                                     │
-│                              │ delegates                           │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │                    Business Logic Services                  │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • SearchService (coordinates searches & caching)           │   │
-│  │  • OpenBreweryDbService (brewery retrieval & filtering)     │   │
-│  │  • YelpPlacesService (restaurant search & details)          │   │
-│  │  • DistanceService (proximity calculations)                 │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              △                                     │
-│                              │ uses                                │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │              Infrastructure Services                        │   │
-│  ├─────────────────────────────────────────────────────────────┤   │
-│  │  • HttpRequesterService (generic HTTP client)               │   │
-│  │  • GlobalExceptionHandler (cross-cutting error handling)    │   │
-│  │  • HttpRequesterConfig (configuration & retry logic)        │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                              △                                     │
-│                              │ HTTP calls                          │
-└────────────────────────────────┼──────────────────────────────────┘
-                                 │
-                    ┌────────────┼
-                    │            │
-                    ▼            ▼
-         ┌──────────────────┐ ┌──────────────┐
-         │ Open Brewery DB  │ │  Yelp API    │
-         │     (Public)     │ │  (External)  │
-         └──────────────────┘ └──────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                         «controller»                                │
+│                       SearchController                              │
+├─────────────────────────────────────────────────────────────────────┤
+│ - searchService: SearchService                                      │
+├─────────────────────────────────────────────────────────────────────┤
+│ + SearchController(searchService: SearchService)                    │
+│ + getBreweries(coordinates: CoordinateDto,                          │
+│                limit: Integer): List<OpenBreweryDbDistanceDto>      │
+│ + getRestaurants(coordinates: CoordinateDto,                        │
+│                  limit: Integer): List<YelpBusinessDistanceDto>     │
+│ + getBreweryWithRestaurants(breweryId: String,                      │
+│      restaurantLimit: Integer): BreweryWithRestaurantsDto           │
+└─────────────────────────────────────────────────────────────────────┘
+                                │
+                                │ uses
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                           «service»                                 │
+│                         SearchService                               │
+├─────────────────────────────────────────────────────────────────────┤
+│ - breweryService: OpenBreweryDbService                              │
+│ - yelpService: YelpPlacesService                                    │
+├─────────────────────────────────────────────────────────────────────┤
+│ + SearchService(breweryService: OpenBreweryDbService,               │
+│                 yelpService: YelpPlacesService)                     │
+│ + getBreweries(coordinates: CoordinateDto,                          │
+│                limit: Integer): List<OpenBreweryDbDistanceDto>      │
+│   @Cacheable(value="breweries", key="...")                          │
+│ + getRestaurants(coordinates: CoordinateDto,                        │
+│                  limit: Integer): List<YelpBusinessDistanceDto>     │
+│   @Cacheable(value="restaurants", key="...")                        │
+│ + getBreweryWithRestaurants(breweryId: String,                      │
+│      restaurantLimit: Integer): BreweryWithRestaurantsDto           │
+│   @Cacheable(value="breweryWithRestaurants", key="...")             │
+└─────────────────────────────────────────────────────────────────────┘
+                    │                              │
+                    │ uses                         │ uses
+                    ▼                              ▼
+┌──────────────────────────────────────┐  ┌──────────────────────────────┐
+│         «service»                    │  │         «service»            │
+│    OpenBreweryDbService              │  │     YelpPlacesService        │
+├──────────────────────────────────────┤  ├──────────────────────────────┤
+│ - httpRequester: HttpRequester       │  │ - httpRequester: HttpRequester│
+│ - distanceService: DistanceService   │  │ - yelpApiKey: String         │
+├──────────────────────────────────────┤  ├──────────────────────────────┤
+│ + OpenBreweryDbService(              │  │ + YelpPlacesService(         │
+│     httpRequester: HttpRequester,    │  │     httpRequester:           │
+│     distanceService: DistanceService)│  │        HttpRequester)        │
+│ + getBreweryById(id: String):        │  │ + getNearbyRestaurants(      │
+│     OpenBreweryDbResponseDto         │  │     coordinates: CoordinateDto,│
+│ + getBreweriesByDistance(            │  │     limit: Integer):         │
+│     coordinates: CoordinateDto,      │  │     List<YelpBusinessDto>    │
+│     perPage: Integer):               │  │ + getBusinessById(id: String):│
+│     List<OpenBreweryDbDistanceDto>   │  │     YelpBusinessResponseDto  │
+└──────────────────────────────────────┘  └──────────────────────────────┘
+                    │                                 │
+                    │ uses                            │ uses
+                    ▼                                 ▼
+┌──────────────────────────────────────┐  ┌──────────────────────────────┐
+│         «service»                    │  │       «interface»            │
+│       DistanceService                │  │       HttpRequester          │
+├──────────────────────────────────────┤  ├──────────────────────────────┤
+│ - EARTH_RADIUS: double = 6371.0      │  │                              │
+├──────────────────────────────────────┤  ├──────────────────────────────┤
+│ + DistanceService()                  │  │ + get<T>(url: String,        │
+│ + calculateDistance(                 │  │     responseType: Class<T>,  │
+│     coordinate1: CoordinateDto,      │  │     headers: Map): T         │
+│     coordinate2: CoordinateDto):     │  │ + get<T>(url: String,        │
+│     double                           │  │     responseType: Class<T>): T│
+│ - validateCoordinate(                │  │ + post<T>(url: String,       │
+│     coordinate: CoordinateDto): void │  │     body: Object,            │
+└──────────────────────────────────────┘  │     responseType: Class<T>,  │
+                                           │     headers: Map): T         │
+                                           │ + post<T>(url: String,       │
+                                           │     body: Object,            │
+                                           │     responseType: Class<T>): T│
+                                           │ + put<T>(...): T             │
+                                           │ + patch<T>(...): T           │
+                                           │ + delete<T>(...): T / void   │
+                                           └──────────────────────────────┘
+                                                       △
+                                                       │ implements
+                                                       │
+                                           ┌──────────────────────────────┐
+                                           │       «service»              │
+                                           │   HttpRequesterService       │
+                                           ├──────────────────────────────┤
+                                           │ - restTemplate: RestTemplate │
+                                           ├──────────────────────────────┤
+                                           │ + HttpRequesterService(      │
+                                           │     template: RestTemplate)  │
+│ + get<T>(...): T             │
+                                           │ + post<T>(...): T            │
+                                           │ + put<T>(...): T             │
+                                           │ + patch<T>(...): T           │
+                                           │ + delete<T>(...): T / void   │
+                                           │ - createHeaders(             │
+                                           │     headers: Map,            │
+                                           │     includeContentType:      │
+                                           │       boolean): HttpHeaders  │
+                                           └──────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                    «RestControllerAdvice»                           │
+│                   GlobalExceptionHandler                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+├─────────────────────────────────────────────────────────────────────┤
+│ + handleBreweryNotFoundException(                                   │
+│     ex: BreweryNotFoundException,                                   │
+│     request: WebRequest): ResponseEntity<ErrorResponse>             │
+│   @ExceptionHandler(BreweryNotFoundException.class)                 │
+│ + handleBreweryNotFoundWithDistException(                           │
+│     ex: BreweryNotFoundWithDistException,                           │
+│     request: WebRequest): ResponseEntity<ErrorResponse>             │
+│   @ExceptionHandler(BreweryNotFoundWithDistException.class)         │
+│ + handleBusinessNotFoundException(                                  │
+│     ex: BusinessNotFoundException,                                  │
+│     request: WebRequest): ResponseEntity<ErrorResponse>             │
+│   @ExceptionHandler(BusinessNotFoundException.class)                │
+│ + handleIllegalArgumentException(                                   │
+│     ex: IllegalArgumentException,                                   │
+│     request: WebRequest): ResponseEntity<ErrorResponse>             │
+│   @ExceptionHandler(IllegalArgumentException.class)                 │
+│ + handleGlobalException(ex: Exception,                              │
+│     request: WebRequest): ResponseEntity<ErrorResponse>             │
+│   @ExceptionHandler(Exception.class)                                │
+└─────────────────────────────────────────────────────────────────────┘
+
+                            Key DTOs:
+
+┌──────────────────────────────┐  ┌────────────────────────────────────┐
+│         «record»             │  │            «record»                │
+│       CoordinateDto          │  │ OpenBreweryDbDistanceResponseDto   │
+├──────────────────────────────┤  ├────────────────────────────────────┤
+│ + latitude: Double           │  │ + id, name, brewery_type: String   │
+│ + longitude: Double          │  │ + address_1, city, state: String   │
+└──────────────────────────────┘  │ + distance: Double                 │
+                                   └────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                          «record»                                   │
+│               YelpBusinessDistanceResponseDto                       │
+├─────────────────────────────────────────────────────────────────────┤
+│ + id, name: String                                                  │
+│ + rating: Double                                                    │
+│ + review_count: Integer                                             │
+│ + distance: Double                                                  │
+│ + location: YelpLocationDto                                         │
+│ + image_url, price, url: String                                     │
+│ + business_hours: List<YelpHoursDto>                                │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 4.3 Key Implementation Details
