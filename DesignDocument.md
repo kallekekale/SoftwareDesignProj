@@ -295,15 +295,17 @@ Who did what, responsibilities and roles.
 #### Wilhelm
 
 - Restructured design document.
-- Planned what needs to be done for the midterm submission.
-- Wrote about AI usage.
-- Made the main use case diagram.
-- Documented extra work.
+- Documented ai usage, self- and team-assement, design decisions.
+- Documented extra work and Redis.
+- Reviewed design document for submission.
+- Implemented base for frontend with Nandan
 
 #### Juho
 
 - Created structure for backend implementing global error handling, generic http requester, initial brewery CRUD DTOs.
-- Rewieved the PRs of other members .
+- Rewieved the PRs of other members and helped with issues.
+- Refactored frontend and implemented state management with Zustand
+- Dockerized application and created nginx reverse proxy configuration
 
 #### Nandan
 
@@ -314,7 +316,10 @@ Who did what, responsibilities and roles.
 
 #### Kalle
 
-- Worked on implementing "Feature: Detailed Restaurant Information" from the extra work section but was unable to finish it in a timely manner and unfortunately the functionality is still very much a work in progress. Will aim to finish this in the near future.
+- Setup project structure
+- Setup GitHub repo with CI/CD pipeline
+- Configure vite dev server proxy to forward API requests to backend
+- Implemented detailed restaurant information
 
 #### Aleksanteri
 
